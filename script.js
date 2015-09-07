@@ -14,7 +14,7 @@ function onLoad() {
 	calculate = document.getElementById("calculate");
 	clear = document.getElementById("clear");
 	ctx = canvas.getContext("2d");
-	canvas.addEventListener("mousedown",function(){addCity(event);});
+	canvas.addEventListener("mousedown",function(event){addCity(event);});
 	calculate.addEventListener("mousedown",function(){run();});
 	clear.addEventListener("mousedown",function(){clearAll();});
 	tourHelper = new TourHelper();
@@ -43,41 +43,43 @@ function addCity(event) {
 }
 
 function run() {
-	var temp = 10000;
-	var coolingRate = 0.001;
+	for(j = 0; j < 5; j++) {
+		var temp = 10000;
+		var coolingRate = 0.001;
 
-	var currentSolution = new Tour();
-	currentSolution.generateTour(tourHelper);
-	best = best == undefined || best == null ? new Tour(currentSolution.tour.slice(0)) : best;
+		var currentSolution = new Tour();
+		currentSolution.generateTour(tourHelper);
+		best = best == undefined || best == null ? new Tour(currentSolution.tour.slice(0)) : best;
 
-	while(temp > 1) {
+		while(temp > 1) {
 
-		var newSolution = new Tour(currentSolution.tour.slice(0));
-		var tourPos1 = Math.floor(Math.random() * newSolution.tour.length);
-		var tourPos2 = Math.floor(Math.random() * newSolution.tour.length);
-		while(tourPos2 == tourPos1) {
+			var newSolution = new Tour(currentSolution.tour.slice(0));
+			var tourPos1 = Math.floor(Math.random() * newSolution.tour.length);
 			var tourPos2 = Math.floor(Math.random() * newSolution.tour.length);
+			while(tourPos2 == tourPos1) {
+				var tourPos2 = Math.floor(Math.random() * newSolution.tour.length);
+			}
+
+			var citySwap1 = newSolution.getCity(tourPos1);
+			var citySwap2 = newSolution.getCity(tourPos2);
+
+			newSolution.setCity(tourPos2,citySwap1);
+			newSolution.setCity(tourPos1,citySwap2);
+
+			var currentE = currentSolution.getDistance();
+			var newE = newSolution.getDistance();
+
+			if(acceptProb(currentE,newE,temp) > Math.random()) {
+				currentSolution = new Tour(newSolution.tour);
+			}
+
+			if(currentSolution.getDistance() < best.getDistance()) {
+				best = new Tour(currentSolution.tour.slice(0));
+				best.distance = 0;
+			}
+
+			temp *= 1 - coolingRate;
 		}
-
-		var citySwap1 = newSolution.getCity(tourPos1);
-		var citySwap2 = newSolution.getCity(tourPos2);
-
-		newSolution.setCity(tourPos2,citySwap1);
-		newSolution.setCity(tourPos1,citySwap2);
-
-		var currentE = currentSolution.getDistance();
-		var newE = newSolution.getDistance();
-
-		if(acceptProb(currentE,newE,temp) > Math.random()) {
-			currentSolution = new Tour(newSolution.tour);
-		}
-
-		if(currentSolution.getDistance() < best.getDistance()) {
-			best = new Tour(currentSolution.tour.slice(0));
-			best.distance = 0;
-		}
-
-		temp *= 1 - coolingRate;
 	}
 
 	best.drawMap(ctx,canvas);

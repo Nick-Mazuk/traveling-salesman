@@ -43,7 +43,7 @@ function addCity(event) {
 }
 
 function run() {
-	for(j = 0; j < 15; j++) {
+	for(j = 0; j < 10; j++) {
 		var temp = 10000;
 		var coolingRate = 0.0001;
 

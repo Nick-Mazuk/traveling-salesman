@@ -45,7 +45,7 @@ function addCity(event) {
 function run() {
 	for(j = 0; j < 15; j++) {
 		var temp = 10000;
-		var coolingRate = 0.001;
+		var coolingRate = 0.0001;
 
 		var currentSolution = new Tour();
 		currentSolution.generateTour(tourHelper);

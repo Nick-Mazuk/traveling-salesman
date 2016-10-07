@@ -85,6 +85,7 @@ function run() {
 		}
 		if(best.getDistance() < overallBest.getDistance()) {
 			overallBest = new Tour(currentSolution.tour.slice(0));
+			console.log("hello");
 		}
 	}
 

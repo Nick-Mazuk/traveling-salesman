@@ -84,7 +84,7 @@ function run() {
 			temp *= 1 - coolingRate;
 		}
 		if(best.getDistance() < overallBest.getDistance()) {
-			overallBest = new Tour(currentSolution.tour.slice(0));
+			overallBest = new Tour(best.tour.slice(0));
 			console.log("hello");
 		}
 	}

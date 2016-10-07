@@ -85,12 +85,10 @@ function run() {
 		}
 		if(best.getDistance() < overallBest.getDistance()) {
 			overallBest = new Tour(best.tour.slice(0));
-			console.log("hello");
 		}
 	}
 
 	overallBest.drawMap(ctx,canvas);
-	console.log(overallBest.getDistance());
 }
 
 function clearAll() {

@@ -5,6 +5,7 @@ var clear;
 var tourHelper;
 var tour;
 var best;
+var overallBest;
 
 window.addEventListener("load",function(){onLoad();sizeCanvas();});
 window.addEventListener("resize",sizeCanvas);
@@ -49,7 +50,7 @@ function run() {
 
 		var currentSolution = new Tour();
 		currentSolution.generateTour(tourHelper);
-		best = best == undefined || best == null ? new Tour(currentSolution.tour.slice(0)) : best;
+		best = new Tour(currentSolution.tour.slice(0));
 
 		while(temp > 1) {
 
@@ -80,9 +81,12 @@ function run() {
 
 			temp *= 1 - coolingRate;
 		}
+		if(best.getDistance() < overallBest.getDistance()) {
+			overallBest = new Tour(currentSolution.tour.slice(0));
+		}
 	}
 
-	best.drawMap(ctx,canvas);
+	overallBest.drawMap(ctx,canvas);
 }
 
 function clearAll() {

@@ -51,6 +51,7 @@ function run() {
 		var currentSolution = new Tour();
 		currentSolution.generateTour(tourHelper);
 		best = new Tour(currentSolution.tour.slice(0));
+		overallBest = overallBest == undefined || overallBest == null ? new Tour(best.tour.slice(0)) : overallBest;
 
 		while(temp > 1) {
 

@@ -89,6 +89,7 @@ function run() {
 	}
 
 	overallBest.drawMap(ctx,canvas);
+	console.log(overallBest.getDistance());
 }
 
 function clearAll() {

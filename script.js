@@ -41,6 +41,7 @@ function addCity(event) {
 	ctx.fill();
 	tourHelper.addCity(new City(xpos,ypos));
 	best = null;
+	overallBest = null;
 }
 
 function run() {

@@ -5,8 +5,9 @@ export class Tour {
     cities: City[];
     roads: Road[];
 
-    constructor (cities: City[]) {
+    constructor (cities: City[] = []) {
         this.cities = cities;
+        this.roads = [];
     }
 
     length(): number {
@@ -15,7 +16,7 @@ export class Tour {
         return length;
     }
 
-    createRoads(): Road[] {
+    _createRoads(): Road[] {
         this.roads = [];
         if (this.cities.length > 2) {
             for (let i = 0; i < this.cities.length - 1; i++) {
@@ -31,14 +32,31 @@ export class Tour {
     }
 
     draw(ctx: CanvasRenderingContext2D) {
-        console.time('Draw')
         ctx.clearRect(0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
+        this._createRoads();
         this.roads.forEach(road => road.draw(ctx));
         this.cities.forEach(city => city.draw(ctx));
-        console.timeEnd('Draw');
     }
 
     positionInCity(xPos, yPos): City[] {
         return this.cities.filter(city => city.pointIsInCity(xPos, yPos));
+    }
+
+    randomizeRoute() {
+        this.cities = this.cities.sort(() => Math.random() - 0.5);
+    }
+
+    getRandomCityIndex(): number {
+        return Math.floor(Math.random() * this.cities.length);
+    }
+
+    getCityByIndex(index: number) {
+        return this.cities[index];
+    }
+
+    swapCitiesByIndex(i: number, j: number) {
+        let tempCity = this.cities[i];
+        this.cities[i] = this.cities[j];
+        this.cities[j] = tempCity;
     }
 }

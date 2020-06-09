@@ -1,8 +1,8 @@
 export class City {
     xPos: number;
     yPos: number;
+    #color = '#dbdbdb'
     static radius = 10;
-    static color = '#dbdbdb'
 
     constructor (xPos: number, yPos: number) {
         this.xPos = xPos;
@@ -12,7 +12,7 @@ export class City {
     draw(ctx: CanvasRenderingContext2D) {
         ctx.beginPath();
         ctx.arc(this.xPos, this.yPos, City.radius, 0, Math.PI * 2);
-        ctx.fillStyle = City.color;
+        ctx.fillStyle = this.#color;
         ctx.fill();
     }
 

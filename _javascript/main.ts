@@ -1,14 +1,10 @@
+import { Algorithms } from './Algorithms';
 import { City } from './City';
-import { Road } from './Road';
 import { Tour } from './Tour';
 
 let canvas: HTMLCanvasElement;
 let ctx: CanvasRenderingContext2D;
-let tour: Tour = new Tour([]);
-
-function clearCanvas() {
-    ctx.clearRect(0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
-}
+let tour: Tour = new Tour();
 
 function getClickedPosition(e: MouseEvent): number[] {
     return [e.clientX - canvas.getBoundingClientRect().left, e.clientY - canvas.getBoundingClientRect().top];
@@ -19,7 +15,8 @@ function createCity(e: MouseEvent) {
     let yPos = e.clientY - canvas.getBoundingClientRect().top - City.radius / 2;
     let city = new City(xPos, yPos);
     tour.addCity(city);
-    city.draw(ctx);
+    tour = Algorithms.annealing(tour);
+    tour.draw(ctx);
 }
 
 function clickedInCity(e: MouseEvent): City[] {

@@ -36,7 +36,7 @@ function canvasClicked(e: MouseEvent) {
 
 function canvasMouseReleased(e: MouseEvent) {
     let clickedCities = clickedInCity(e);
-    if (clickedCities && clickedCities[0] == selectedCity) {
+    if (clickedCities.length && clickedCities[0] == selectedCity) {
         tour.removeCity(selectedCity);
         selectedCity = undefined;
         tour.draw(ctx);

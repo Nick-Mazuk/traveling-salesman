@@ -15,7 +15,7 @@ function createCity(e: MouseEvent) {
     let yPos = e.clientY - canvas.getBoundingClientRect().top - City.radius / 2;
     let city = new City(xPos, yPos);
     tour.addCity(city);
-    tour = Algorithms.annealing(tour);
+    tour = Algorithms.greedy(tour);
     tour.draw(ctx);
 }
 

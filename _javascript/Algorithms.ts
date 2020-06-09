@@ -4,8 +4,8 @@ export class Algorithms {
     static annealing(tour: Tour, temp = 10000, coolingRate = 0.001): Tour {
         if (tour.cities.length < 3) return tour;
 
-        function acceptableImprovement(originalDistance, newDistance, temp) {
-            if (newDistance < originalDistance) return 1;
+        function acceptance(originalDistance, newDistance, temp) {
+            if (originalDistance < newDistance) return 1;
             return Math.exp(-(newDistance - originalDistance) / temp);
         }
 
@@ -26,7 +26,7 @@ export class Algorithms {
             tour.swapCitiesByIndex(cityA, cityB);
             const currentLength = tour.length();
 
-            if (acceptableImprovement(shortestLength, currentLength, temp) < Math.random()) {
+            if (acceptance(shortestLength, currentLength, temp) < Math.random()) {
                 console.log('switched', shortestLength, currentLength)
                 shortest = new Tour(tour.cities);
             }
@@ -39,5 +39,22 @@ export class Algorithms {
         }
 
         return shortest;
+    }
+
+    static greedy(tour: Tour): Tour {
+        if (tour.cities.length < 3) return tour;
+        for (let i = 0; i < tour.cities.length - 1; i++) {
+            let closestCity = i + 1;
+            let closestDistance = Infinity;
+            for (let j = closestCity; j < tour.cities.length; j++) {
+                let distance = tour.cities[i].distanceFromCity(tour.cities[j]);
+                if (distance < closestDistance) {
+                    closestCity = j;
+                    closestDistance = distance;
+                }
+            }
+            tour.swapCitiesByIndex(i + 1, closestCity);
+        }
+        return tour;
     }
 }

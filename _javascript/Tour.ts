@@ -59,4 +59,8 @@ export class Tour {
         this.cities[i] = this.cities[j];
         this.cities[j] = tempCity;
     }
+
+    removeCity(removedCity: City) {
+        this.cities = this.cities.filter(city => city.xPos != removedCity.xPos && city.yPos != removedCity.yPos);
+    }
 }

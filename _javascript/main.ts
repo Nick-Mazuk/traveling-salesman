@@ -5,6 +5,7 @@ import { Tour } from './Tour';
 let canvas: HTMLCanvasElement;
 let ctx: CanvasRenderingContext2D;
 let tour: Tour = new Tour();
+let selectedCity: City;
 
 function getClickedPosition(e: MouseEvent): number[] {
     return [e.clientX - canvas.getBoundingClientRect().left, e.clientY - canvas.getBoundingClientRect().top];
@@ -25,9 +26,20 @@ function clickedInCity(e: MouseEvent): City[] {
 }
 
 function canvasClicked(e: MouseEvent) {
-    let clickedCities = clickedInCity(e)
+    let clickedCities = clickedInCity(e);
     if (!clickedCities.length) {
         createCity(e);
+    } else {
+        selectedCity = clickedCities[0];
+    }
+}
+
+function canvasMouseReleased(e: MouseEvent) {
+    let clickedCities = clickedInCity(e);
+    if (clickedCities && clickedCities[0] == selectedCity) {
+        tour.removeCity(selectedCity);
+        selectedCity = undefined;
+        tour.draw(ctx);
     }
 }
 
@@ -40,6 +52,7 @@ function setupCanvas(canvas: HTMLCanvasElement) {
     ctx.scale(dpr, dpr);
 
     canvas.addEventListener('mousedown', canvasClicked);
+    canvas.addEventListener('mouseup', canvasMouseReleased);
 }
 
 function setup() {

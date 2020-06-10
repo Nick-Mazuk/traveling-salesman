@@ -12,12 +12,14 @@ function getClickedPosition(e: MouseEvent): number[] {
 }
 
 function createCity(e: MouseEvent) {
+    console.time('Draw')
     let xPos = e.clientX - canvas.getBoundingClientRect().left - City.radius / 2;
     let yPos = e.clientY - canvas.getBoundingClientRect().top - City.radius / 2;
     let city = new City(xPos, yPos);
     tour.addCity(city);
-    tour = Algorithms.greedy(tour);
+    tour = Algorithms.annealing(tour);
     tour.draw(ctx);
+    console.timeEnd('Draw')
 }
 
 function clickedInCity(e: MouseEvent): City[] {
@@ -39,6 +41,7 @@ function canvasMouseReleased(e: MouseEvent) {
     if (clickedCities.length && clickedCities[0] == selectedCity) {
         tour.removeCity(selectedCity);
         selectedCity = undefined;
+        tour = Algorithms.annealing(tour);
         tour.draw(ctx);
     }
 }

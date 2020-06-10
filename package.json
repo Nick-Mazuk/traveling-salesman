@@ -79,6 +79,8 @@
         "@babel/plugin-proposal-private-methods": "^7.10.1",
         "babel-core": "^6.26.3",
         "babelify": "^10.0.0",
-        "chart.js": "^2.9.3"
+        "browserify": "^16.5.1",
+        "chart.js": "^2.9.3",
+        "rfdc": "^1.1.4"
     }
 }

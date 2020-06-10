@@ -1,23 +1,21 @@
 import { Tour } from './Tour';
 
 export class Algorithms {
-    static annealing(tour: Tour, temp = 10000, coolingRate = 0.001): Tour {
-        if (tour.cities.length < 3) return tour;
-
-        function acceptance(originalDistance, newDistance, temp) {
-            if (originalDistance < newDistance) return 1;
-            return Math.exp(-(newDistance - originalDistance) / temp);
-        }
+    static annealing(tour: Tour, temp = 5, coolingRate = 0.001): Tour {
+        if (tour.cities.length < 4) return tour;
 
         let shortestLength = tour.length();
         let shortest = new Tour(tour.cities);
 
-        while (temp > 1) {
-            const tour = new Tour(shortest.cities);
+        let lastTour = shortest;
+        let lastLength = shortestLength;
+
+        while (temp > 0.1) {
+            const tour = new Tour(lastTour.cities);
 
             // generate random city indexes
             const cityA = tour.getRandomCityIndex();
-            let cityB = tour.getRandomCityIndex();
+            let cityB = tour.getRandomCityIndex(cityA, temp);
 
             while (cityA == cityB) {
                 cityB = tour.getRandomCityIndex();
@@ -26,23 +24,26 @@ export class Algorithms {
             tour.swapCitiesByIndex(cityA, cityB);
             const currentLength = tour.length();
 
-            if (acceptance(shortestLength, currentLength, temp) < Math.random()) {
-                console.log('switched', shortestLength, currentLength)
-                shortest = new Tour(tour.cities);
+            if (currentLength < lastLength) {
+                lastTour = new Tour(tour.cities);
+                lastLength = currentLength;
+            } else if (Math.random() <= Math.exp(-Math.abs((currentLength - lastLength) / currentLength) / temp)) {
+                lastTour = new Tour(tour.cities);
+                lastLength = currentLength;
             }
 
-            if (tour.length() < shortestLength) {
+            if (currentLength < shortestLength) {
                 shortestLength = tour.length();
+                shortest = tour;
             }
 
             temp *= (1 - coolingRate);
         }
-
         return shortest;
     }
 
     static greedy(tour: Tour): Tour {
-        if (tour.cities.length < 3) return tour;
+        if (tour.cities.length < 4) return tour;
         for (let i = 0; i < tour.cities.length - 1; i++) {
             let closestCity = i + 1;
             let closestDistance = Infinity;

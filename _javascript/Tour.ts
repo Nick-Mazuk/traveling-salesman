@@ -6,11 +6,13 @@ export class Tour {
     roads: Road[];
 
     constructor (cities: City[] = []) {
-        this.cities = cities;
+        this.cities = [];
+        cities.forEach(city => this.cities.push(city));
         this.roads = [];
     }
 
     length(): number {
+        this._createRoads();
         let length = 0;
         this.roads.forEach(road => length += road.length());
         return length;
@@ -46,8 +48,8 @@ export class Tour {
         this.cities = this.cities.sort(() => Math.random() - 0.5);
     }
 
-    getRandomCityIndex(): number {
-        return Math.floor(Math.random() * this.cities.length);
+    getRandomCityIndex(index = 0, temp = this.cities.length): number {
+        return (Math.floor(Math.random() * Math.min(this.cities.length, temp)) + index) % this.cities.length;
     }
 
     getCityByIndex(index: number) {

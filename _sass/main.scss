@@ -1,0 +1,23 @@
+@charset "utf-8";
+
+@import "../node_modules/bulma/sass/utilities/initial-variables";
+
+$yellow: #FCCE00;
+$red: #EB0000;
+$green: #008a00;
+$blue: #0073E6;
+$primary: $blue;
+$link-visited: $blue;
+$link-hover: $blue;
+$panel-heading-background-color: white;
+$text: #242424;
+$dark: $text;
+
+
+
+@import "../node_modules/bulma/bulma";
+
+canvas {
+    width: 100%;
+    cursor: pointer;
+}

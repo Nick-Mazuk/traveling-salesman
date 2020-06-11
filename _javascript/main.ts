@@ -14,8 +14,8 @@ function getDistanceBetweenPoints(pointA: number[], pointB: number[]) {
     return Math.sqrt((pointA[0] - pointB[0]) ** 2 + (pointA[1] - pointB[1]) ** 2);
 }
 
-function optimizeTourAndDraw() {
-    tour = Algorithms.annealing(tour, canvas);
+function optimizeTourAndDraw(shortVersion: boolean = false) {
+    tour = Algorithms.annealing(tour, canvas, shortVersion);
     tour.draw(ctx);
 }
 
@@ -64,7 +64,7 @@ function canvasMouseMoved(e: MouseEvent) {
     if (selectedCity) {
         let currentMousePosition = getMousePosition(e);
         selectedCity.move(currentMousePosition[0], currentMousePosition[1]);
-        optimizeTourAndDraw();
+        optimizeTourAndDraw(true);
     }
 }
 
@@ -82,7 +82,7 @@ function setupCanvas(canvas: HTMLCanvasElement) {
 }
 
 function initTour() {
-    const cityCount = 5;
+    const cityCount = 20;
     const width = canvas.getBoundingClientRect().width;
     const height = canvas.getBoundingClientRect().height;
     const cityRadius = City.radius;

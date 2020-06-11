@@ -1,7 +1,7 @@
 import { Tour } from './Tour';
 
 export class Algorithms {
-    static annealing(tour: Tour, canvas?: HTMLCanvasElement, maxTemp = 100, coolingRate = 0.001): Tour {
+    static annealing(tour: Tour, canvas?: HTMLCanvasElement, shortVersion?: boolean, maxTemp = 100, coolingRate = 0.001): Tour {
         if (tour.cities.length < 4) return tour;
 
         function calcTemp(frame: number, maxTime: number, maxTemp: number): number {
@@ -12,7 +12,8 @@ export class Algorithms {
             maxTemp = (canvas.getBoundingClientRect().width + canvas.getBoundingClientRect().height) / 18;
         }
 
-        let maxTime = tour.cities.length * 100 + (tour.cities.length > 10 ? (tour.cities.length - 10) ** 2.5 : 0);
+        let largeMultiplier = shortVersion ? 1.8 : 2.5;
+        let maxTime = tour.cities.length * 100 + (tour.cities.length > 10 ? (tour.cities.length - 10) ** largeMultiplier : 0);
         let frame = 0;
 
         let shortestLength = tour.length();

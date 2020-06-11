@@ -1,8 +1,20 @@
 import { Tour } from './Tour';
 
 export class Algorithms {
-    static annealing(tour: Tour, temp = 5, coolingRate = 0.001): Tour {
+    // TODO Calculate length based only on switched cities (speed up algorithm)
+    static annealing(tour: Tour, canvas?: HTMLCanvasElement, maxTemp = 100, coolingRate = 0.001): Tour {
         if (tour.cities.length < 4) return tour;
+
+        function calcTemp(frame: number, maxTime: number, maxTemp: number): number {
+            return maxTemp * (1 - frame / maxTime) + 0.0001;
+        }
+
+        if (canvas != void 0) {
+            maxTemp = (canvas.getBoundingClientRect().width + canvas.getBoundingClientRect().height) / 18;
+        }
+
+        let maxTime = tour.cities.length * 100 + (tour.cities.length > 10 ? (tour.cities.length - 10) ** 2.5 : 0);
+        let frame = 0;
 
         let shortestLength = tour.length();
         let shortest = new Tour(tour.cities);
@@ -10,7 +22,8 @@ export class Algorithms {
         let lastTour = shortest;
         let lastLength = shortestLength;
 
-        while (temp > 0.1) {
+        while (frame < maxTime) {
+            let temp = calcTemp(frame, maxTime, maxTemp);
             const tour = new Tour(lastTour.cities);
 
             // generate random city indexes
@@ -27,7 +40,8 @@ export class Algorithms {
             if (currentLength < lastLength) {
                 lastTour = new Tour(tour.cities);
                 lastLength = currentLength;
-            } else if (Math.random() <= Math.exp(-Math.abs((currentLength - lastLength) / currentLength) / temp)) {
+            } else if (Math.random() <= Math.exp(-Math.abs(currentLength - lastLength) / temp)) {
+                // console.log(Math.exp(-Math.abs((currentLength - lastLength) / currentLength) / (temp / maxTemp)), { currentLength, lastLength, temp })
                 lastTour = new Tour(tour.cities);
                 lastLength = currentLength;
             }
@@ -38,6 +52,7 @@ export class Algorithms {
             }
 
             temp *= (1 - coolingRate);
+            frame++;
         }
         return shortest;
     }

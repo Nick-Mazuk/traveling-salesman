@@ -1,3 +1,5 @@
+// TODO Animate algorithms
+
 import { Algorithms } from './Algorithms';
 import { City } from './City';
 import { Tour } from './Tour';
@@ -17,7 +19,7 @@ function createCity(e: MouseEvent) {
     let yPos = e.clientY - canvas.getBoundingClientRect().top - City.radius / 2;
     let city = new City(xPos, yPos);
     tour.addCity(city);
-    tour = Algorithms.annealing(tour);
+    tour = Algorithms.annealing(tour, canvas);
     tour.draw(ctx);
     console.timeEnd('Draw')
 }

@@ -37,12 +37,15 @@ function mouseInCity(mousePosition?: number[]): City[] {
 }
 
 function canvasClicked(e: MouseEvent) {
-    mouseClickedPosition = getMousePosition(e);
-    let clickedCities = mouseInCity();
-    if (!clickedCities.length) {
-        createCity(e);
-    } else {
-        selectedCity = clickedCities[0];
+    let rightClicked = e.which == 3 || e.button == 2;
+    if (!rightClicked) {
+        mouseClickedPosition = getMousePosition(e);
+        let clickedCities = mouseInCity();
+        if (!clickedCities.length) {
+            createCity(e);
+        } else {
+            selectedCity = clickedCities[0];
+        }
     }
 }
 

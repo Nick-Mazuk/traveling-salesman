@@ -1,7 +1,6 @@
 import { Tour } from './Tour';
 
 export class Algorithms {
-    // TODO Calculate length based only on switched cities (speed up algorithm)
     static annealing(tour: Tour, canvas?: HTMLCanvasElement, maxTemp = 100, coolingRate = 0.001): Tour {
         if (tour.cities.length < 4) return tour;
 
@@ -51,7 +50,6 @@ export class Algorithms {
                 shortest = tour;
             }
 
-            temp *= (1 - coolingRate);
             frame++;
         }
         return shortest;

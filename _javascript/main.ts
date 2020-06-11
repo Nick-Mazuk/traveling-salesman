@@ -8,29 +8,37 @@ let canvas: HTMLCanvasElement;
 let ctx: CanvasRenderingContext2D;
 let tour: Tour = new Tour();
 let selectedCity: City;
+let mouseClickedPosition: number[];
 
-function getClickedPosition(e: MouseEvent): number[] {
+function getDistanceBetweenPoints(pointA: number[], pointB: number[]) {
+    return Math.sqrt((pointA[0] - pointB[0]) ** 2 + (pointA[1] - pointB[1]) ** 2);
+}
+
+function optimizeTourAndDraw() {
+    tour = Algorithms.annealing(tour, canvas);
+    tour.draw(ctx);
+}
+
+function getMousePosition(e: MouseEvent): number[] {
     return [e.clientX - canvas.getBoundingClientRect().left, e.clientY - canvas.getBoundingClientRect().top];
 }
 
 function createCity(e: MouseEvent) {
-    console.time('Draw')
     let xPos = e.clientX - canvas.getBoundingClientRect().left - City.radius / 2;
     let yPos = e.clientY - canvas.getBoundingClientRect().top - City.radius / 2;
     let city = new City(xPos, yPos);
     tour.addCity(city);
-    tour = Algorithms.annealing(tour, canvas);
-    tour.draw(ctx);
-    console.timeEnd('Draw')
+    optimizeTourAndDraw();
 }
 
-function clickedInCity(e: MouseEvent): City[] {
-    const clickedPosition = getClickedPosition(e);
-    return tour.positionInCity(clickedPosition[0], clickedPosition[1]);
+function mouseInCity(mousePosition?: number[]): City[] {
+    if (mousePosition == undefined) mousePosition = mouseClickedPosition
+    return tour.positionInCity(mousePosition[0], mousePosition[1]);
 }
 
 function canvasClicked(e: MouseEvent) {
-    let clickedCities = clickedInCity(e);
+    mouseClickedPosition = getMousePosition(e);
+    let clickedCities = mouseInCity();
     if (!clickedCities.length) {
         createCity(e);
     } else {
@@ -39,12 +47,21 @@ function canvasClicked(e: MouseEvent) {
 }
 
 function canvasMouseReleased(e: MouseEvent) {
-    let clickedCities = clickedInCity(e);
-    if (clickedCities.length && clickedCities[0] == selectedCity) {
+    let currentMousePosition = getMousePosition(e);
+    if (selectedCity && getDistanceBetweenPoints(currentMousePosition, mouseClickedPosition) < City.radius) {
         tour.removeCity(selectedCity);
         selectedCity = undefined;
-        tour = Algorithms.annealing(tour);
-        tour.draw(ctx);
+        optimizeTourAndDraw();
+    }
+    mouseClickedPosition = undefined;
+    selectedCity = undefined;
+}
+
+function canvasMouseMoved(e: MouseEvent) {
+    if (selectedCity) {
+        let currentMousePosition = getMousePosition(e);
+        selectedCity.move(currentMousePosition[0], currentMousePosition[1]);
+        optimizeTourAndDraw();
     }
 }
 
@@ -58,11 +75,25 @@ function setupCanvas(canvas: HTMLCanvasElement) {
 
     canvas.addEventListener('mousedown', canvasClicked);
     canvas.addEventListener('mouseup', canvasMouseReleased);
+    canvas.addEventListener('mousemove', canvasMouseMoved);
+}
+
+function initTour() {
+    const cityCount = 5;
+    const width = canvas.getBoundingClientRect().width;
+    const height = canvas.getBoundingClientRect().height;
+    const cityRadius = City.radius;
+    for (let i = 0; i < cityCount; i++) {
+        const city = new City(Math.floor(Math.random() * (width - 2 * cityRadius)) + cityRadius, Math.floor(Math.random() * (height - 2 * cityRadius)) + cityRadius);
+        tour.addCity(city)
+    }
+    optimizeTourAndDraw();
 }
 
 function setup() {
     canvas = document.querySelector('canvas');
     setupCanvas(canvas);
+    initTour();
 }
 
 window.addEventListener('DOMContentLoaded', setup);

@@ -82,7 +82,7 @@ function setupCanvas(canvas: HTMLCanvasElement) {
 }
 
 function initTour() {
-    const cityCount = 20;
+    const cityCount = 5;
     const width = canvas.getBoundingClientRect().width;
     const height = canvas.getBoundingClientRect().height;
     const cityRadius = City.radius;

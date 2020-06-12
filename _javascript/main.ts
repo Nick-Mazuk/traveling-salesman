@@ -9,6 +9,7 @@ let ctx: CanvasRenderingContext2D;
 let tour: Tour = new Tour();
 let selectedCity: City;
 let mouseClickedPosition: number[];
+let algorithmMode: string;
 
 function getDistanceBetweenPoints(pointA: number[], pointB: number[]) {
     return Math.sqrt((pointA[0] - pointB[0]) ** 2 + (pointA[1] - pointB[1]) ** 2);
@@ -16,9 +17,9 @@ function getDistanceBetweenPoints(pointA: number[], pointB: number[]) {
 
 function optimizeTourAndDraw(onMouseMove: boolean = false) {
     if (onMouseMove) {
-        tour = Algorithms.optimize(tour, 'annealing', canvas, selectedCity);
+        tour = Algorithms.optimize(tour, algorithmMode, canvas, selectedCity);
     } else {
-        tour = Algorithms.optimize(tour, 'annealing', canvas);
+        tour = Algorithms.optimize(tour, algorithmMode, canvas);
     }
     tour.draw(ctx);
 }
@@ -85,22 +86,42 @@ function setupCanvas(canvas: HTMLCanvasElement) {
     canvas.addEventListener('mousemove', canvasMouseMoved);
 }
 
-function initTour() {
-    const cityCount = 5;
+function changeAlgorithmMode() {
+    algorithmMode = (<HTMLSelectElement>document.getElementById('algorithm-mode')).value;
+    tour.randomizeRoute();
+    optimizeTourAndDraw();
+}
+
+function randomBoard() {
+    const cityCount = 7;
     const width = canvas.getBoundingClientRect().width;
     const height = canvas.getBoundingClientRect().height;
     const cityRadius = City.radius;
+
+    tour.clear();
     for (let i = 0; i < cityCount; i++) {
         const city = new City(Math.floor(Math.random() * (width - 2 * cityRadius)) + cityRadius, Math.floor(Math.random() * (height - 2 * cityRadius)) + cityRadius);
         tour.addCity(city)
     }
+    changeAlgorithmMode()
+}
+
+function clearBoard() {
+    tour.clear()
     optimizeTourAndDraw();
+}
+
+function setupEventListeners() {
+    document.getElementById('algorithm-mode').addEventListener('change', changeAlgorithmMode);
+    document.getElementById('clear-board').addEventListener('click', clearBoard);
+    document.getElementById('random-board').addEventListener('click', randomBoard);
 }
 
 function setup() {
     canvas = document.querySelector('canvas');
     setupCanvas(canvas);
-    initTour();
+    setupEventListeners();
+    randomBoard();
 }
 
 window.addEventListener('DOMContentLoaded', setup);

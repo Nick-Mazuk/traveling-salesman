@@ -25,11 +25,11 @@
 
             <div id="navbarBasicExample" class="navbar-menu">
                 <div class="navbar-start">
-                    <a class="navbar-item">
+                    <a class="navbar-item" id='random-board'>
                         Random Board
                     </a>
 
-                    <a class="navbar-item">
+                    <a class="navbar-item" id='clear-board'>
                         Clear Board
                     </a>
 
@@ -58,10 +58,11 @@
                 <div class="navbar-end">
                     <div class="navbar-item">
                         <div class="select">
-                            <select>
+                            <select id='algorithm-mode'>
                                 <option value='greedy'>Greedy</option>
                                 <option value='annealing' selected>Annealing (default)</option>
-                                <option value='annealing'>Annealing - optimized</option>
+                                <option value='genetic'>Genetic</option>
+                                <option value='uncross'>Uncrossing</option>
                                 <option value='speedy'>Speedy - custom</option>
                             </select>
                         </div>

@@ -4,6 +4,7 @@ import { Road } from './Road';
 export class Tour {
     cities: City[];
     roads: Road[];
+    totalLength: number;
 
     constructor (cities: City[] = []) {
         this.cities = [];
@@ -15,6 +16,7 @@ export class Tour {
         this._createRoads();
         let length = 0;
         this.roads.forEach(road => length += road.length());
+        this.totalLength = length;
         return length;
     }
 
@@ -98,5 +100,10 @@ export class Tour {
             if (distance <= furthestNeighbor) return false;
         }
         return true;
+    }
+
+    clear() {
+        this.cities = [];
+        this.roads = [];
     }
 }

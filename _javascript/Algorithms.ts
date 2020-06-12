@@ -13,6 +13,7 @@ export class Algorithms {
                 tour = Algorithms.greedy(tour);
                 break;
             default:
+                tour = Algorithms.annealing(tour, canvas, !!movedCity);
         }
         return tour;
     }

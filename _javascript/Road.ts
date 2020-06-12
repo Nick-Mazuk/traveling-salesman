@@ -4,7 +4,7 @@ export class Road {
     cityA: City;
     cityB: City;
     #width = 3;
-    #color = '#777777'
+    #color = '#757575'
 
     constructor (cityA: City, cityB: City) {
         this.cityA = cityA;

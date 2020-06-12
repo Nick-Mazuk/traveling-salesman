@@ -1,7 +1,7 @@
 export class City {
     xPos: number;
     yPos: number;
-    #color = '#dbdbdb'
+    #color = '#757575'
     static radius = 10;
 
     constructor (xPos: number, yPos: number) {

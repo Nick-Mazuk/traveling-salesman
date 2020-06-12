@@ -1,8 +1,23 @@
 import { Tour } from './Tour';
-
+import { City } from './City';
+// TODO Calculate BigO for the function and limit time complexity when possible.
 export class Algorithms {
-    static annealing(tour: Tour, canvas?: HTMLCanvasElement, shortVersion?: boolean, maxTemp = 100, coolingRate = 0.001): Tour {
+    static optimize(tour: Tour, algorithm: string, canvas: HTMLCanvasElement, movedCity?: City): Tour {
         if (tour.cities.length < 4) return tour;
+
+        switch (algorithm) {
+            case 'annealing':
+                tour = Algorithms.annealing(tour, canvas, !!movedCity);
+                break;
+            case 'greedy':
+                tour = Algorithms.greedy(tour);
+                break;
+            default:
+        }
+        return tour;
+    }
+
+    static annealing(tour: Tour, canvas?: HTMLCanvasElement, shortVersion?: boolean, maxTemp = 150, coolingRate = 0.001): Tour {
 
         function calcTemp(frame: number, maxTime: number, maxTemp: number): number {
             return maxTemp * (1 - frame / maxTime) + 0.0001;

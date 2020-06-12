@@ -14,8 +14,12 @@ function getDistanceBetweenPoints(pointA: number[], pointB: number[]) {
     return Math.sqrt((pointA[0] - pointB[0]) ** 2 + (pointA[1] - pointB[1]) ** 2);
 }
 
-function optimizeTourAndDraw(shortVersion: boolean = false) {
-    tour = Algorithms.annealing(tour, canvas, shortVersion);
+function optimizeTourAndDraw(onMouseMove: boolean = false) {
+    if (onMouseMove) {
+        tour = Algorithms.optimize(tour, 'annealing', canvas, selectedCity);
+    } else {
+        tour = Algorithms.optimize(tour, 'annealing', canvas);
+    }
     tour.draw(ctx);
 }
 

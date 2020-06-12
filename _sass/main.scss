@@ -12,12 +12,13 @@ $link-hover: $blue;
 $panel-heading-background-color: white;
 $text: #242424;
 $dark: $text;
-
+$navbar-breakpoint: 0;
 
 
 @import "../node_modules/bulma/bulma";
 
 canvas {
     width: 100%;
+    height: 100%;
     cursor: pointer;
 }

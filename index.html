@@ -8,8 +8,8 @@
         <link rel="stylesheet" href="./css/main.css">
     </head>
 
-    <body>
-        <nav class="navbar is-light" role="navigation" aria-label="main navigation">
+    <body class='has-navbar-fixed-bottom'>
+        <nav class="navbar has-background-light is-transparent" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
                 <a class="navbar-item" href="./">
                     <h2 class="title is-size-4">Traveling Salesman</h2>
@@ -47,7 +47,8 @@
                                 Learn the Algorithms
                             </a>
                             <hr class="navbar-divider">
-                            <a class="navbar-item">
+                            <a class="navbar-item" href='https://github.com/Nick-Mazuk/traveling-salesman'
+                                target="_blank">
                                 Github
                             </a>
                         </div>
@@ -59,11 +60,14 @@
                     <div class="navbar-item">
                         <div class="select">
                             <select id='algorithm-mode'>
+                                <option value='force'>Brute Force (Unfinished)</option>
                                 <option value='greedy'>Greedy</option>
+                                <option value='hillClimber'>Hill Climber (unfinished)</option>
                                 <option value='annealing' selected>Annealing (default)</option>
-                                <option value='genetic'>Genetic</option>
-                                <option value='uncross'>Uncrossing</option>
-                                <option value='speedy'>Speedy - custom</option>
+                                <option value='genetic'>Genetic (unfinished)</option>
+                                <option value='uncross'>Uncrossing (unfinished)</option>
+                                <option value='speedy'>Speedy (unfinished)</option>
+                                <option value='bogo'>Bogo-style</option>
                             </select>
                         </div>
                     </div>
@@ -83,6 +87,22 @@
 
             </canvas>
         </div>
+
+        <nav class="navbar is-transparent is-fixed-bottom has-background-light">
+            <div class="navbar-menu">
+                <div class="navbar-start">
+                    <div class="navbar-item" id='algorithm-descriptions'>
+                        <b>Annealing Algorithm</b>: Produces close to optimal or optimal path
+                    </div>
+                </div>
+
+                <div class="navbar-end">
+                    <div class="navbar-item">
+                        Computed in <b>&nbsp;<span id="timing">2.131</span> &nbsp;ms</b>
+                    </div>
+                </div>
+            </div>
+        </nav>
     </body>
     <script src="./lib/bundle.js"></script>
 

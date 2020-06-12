@@ -12,6 +12,9 @@ export class Algorithms {
             case 'greedy':
                 tour = Algorithms.greedy(tour);
                 break;
+            case 'bogo':
+                tour = Algorithms.bogo(tour);
+                break;
             default:
                 tour = Algorithms.annealing(tour, canvas, !!movedCity);
         }
@@ -86,6 +89,11 @@ export class Algorithms {
             }
             tour.swapCitiesByIndex(i + 1, closestCity);
         }
+        return tour;
+    }
+
+    static bogo(tour: Tour): Tour {
+        tour.randomizeRoute();
         return tour;
     }
 }

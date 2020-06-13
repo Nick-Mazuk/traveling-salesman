@@ -1,8 +1,12 @@
 // TODO Animate algorithms
-// TODO Canvas always 100% vh and vw
-// TODO Canvas updates on window resize
 // TODO Create tutorial
 // TODO Create "about the algorithms" section
+// TODO Calculate time complexities for algorithms
+// TODO Create brute force algorithm
+// TODO Create hill climber algorithm
+// TODO Create genetic algorithm
+// TODO Create uncrossing algorithm
+// TODO Create speedy algorithm
 
 import { Algorithms } from './Algorithms';
 import { City } from './City';

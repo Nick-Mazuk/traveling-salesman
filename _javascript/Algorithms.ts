@@ -1,6 +1,6 @@
 import { Tour } from './Tour';
 import { City } from './City';
-// TODO Calculate BigO for the function and limit time complexity when possible.
+
 export class Algorithms {
     static optimize(tour: Tour, algorithm: string, canvas: HTMLCanvasElement, movedCity?: City): Tour {
         if (tour.cities.length < 4) return tour;

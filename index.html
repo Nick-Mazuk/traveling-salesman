@@ -9,7 +9,8 @@
     </head>
 
     <body class='has-navbar-fixed-bottom'>
-        <nav class="navbar has-background-light is-transparent" role="navigation" aria-label="main navigation">
+        <nav class="navbar has-background-light is-transparent" role="navigation" aria-label="main navigation"
+            id='top-navbar'>
             <div class="navbar-brand">
                 <a class="navbar-item" href="./">
                     <h2 class="title is-size-4">Traveling Salesman</h2>
@@ -82,13 +83,13 @@
             </div>
         </nav>
 
-        <div class="section pt-0 pb-0 pl-0 pr-0">
+        <div class="section pt-0 pb-0 pl-0 pr-0 mb-0">
             <canvas id='canvas'>
 
             </canvas>
         </div>
 
-        <nav class="navbar is-transparent is-fixed-bottom has-background-light">
+        <nav class="navbar is-transparent is-fixed-bottom has-background-light" id='bottom-navbar'>
             <div class="navbar-menu">
                 <div class="navbar-start">
                     <div class="navbar-item" id='algorithm-descriptions'>

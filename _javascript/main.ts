@@ -92,13 +92,39 @@ function canvasMouseMoved(e: MouseEvent) {
     }
 }
 
-function setupCanvas(canvas: HTMLCanvasElement) {
+function resizeCities(oldWidth, oldHeight, newWidth, newHeight) {
+    if (tour.cities.length) {
+        const changeX = newWidth / oldWidth;
+        const changeY = newHeight / oldHeight;
+        tour.cities.forEach(city => {
+            city.canvas = canvas;
+            city.move(Math.round(city.xPos * changeX), Math.round(city.yPos * changeY));
+        })
+    }
+}
+
+function createCanvasSize(canvas: HTMLCanvasElement) {
     const dpr = window.devicePixelRatio || 1;
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
+
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    height -= document.querySelector('#top-navbar').getBoundingClientRect().height;
+    height -= document.querySelector('#bottom-navbar').getBoundingClientRect().height;
+
+    width *= dpr;
+    height *= dpr;
+
+    resizeCities(canvas.width, canvas.height, width, height);
+
+    canvas.width = width;
+    canvas.height = height;
     ctx = canvas.getContext('2d');
     ctx.scale(dpr, dpr);
+    optimizeTourAndDraw();
+}
+
+function setupCanvas(canvas: HTMLCanvasElement) {
+    createCanvasSize(canvas);
 
     canvas.addEventListener('mousedown', canvasClicked);
     canvas.addEventListener('mouseup', canvasMouseReleased);
@@ -135,6 +161,7 @@ function setupEventListeners() {
     document.getElementById('algorithm-mode').addEventListener('change', changeAlgorithmMode);
     document.getElementById('clear-board').addEventListener('click', clearBoard);
     document.getElementById('random-board').addEventListener('click', randomBoard);
+    window.addEventListener('resize', () => createCanvasSize(canvas))
 }
 
 function setup() {

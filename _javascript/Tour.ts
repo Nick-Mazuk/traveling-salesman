@@ -7,8 +7,7 @@ export class Tour {
     totalLength: number;
 
     constructor (cities: City[] = []) {
-        this.cities = [];
-        cities.forEach(city => this.cities.push(city));
+        this.cities = cities.slice();
         this.roads = [];
     }
 
@@ -31,11 +30,11 @@ export class Tour {
         return this.roads;
     }
 
-    addCity(city: City) {
+    addCity(city: City): void {
         this.cities.push(city);
     }
 
-    draw(ctx: CanvasRenderingContext2D) {
+    draw(ctx: CanvasRenderingContext2D): void {
         ctx.clearRect(0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
         this._createRoads();
         this.roads.forEach(road => road.draw(ctx));
@@ -46,19 +45,35 @@ export class Tour {
         return this.cities.filter(city => city.pointIsInCity(xPos, yPos));
     }
 
-    randomizeRoute() {
+    randomizeRoute(): void {
         this.cities = this.cities.sort(() => Math.random() - 0.5);
     }
 
     getRandomCityIndex(index = 0, temp = this.cities.length): number {
-        return (Math.floor(Math.random() * Math.min(this.cities.length, temp)) + index) % this.cities.length;
+        return (Math.ceil(Math.random() * Math.min(this.cities.length - 1, temp)) + index) % this.cities.length;
     }
 
-    getCityByIndex(index: number) {
+    getCityByIndex(index: number): City {
         return this.cities[index];
     }
 
-    swapCitiesByIndex(i: number, j: number) {
+    getLengthChangeFromSwappingCities(i: number, j: number): number {
+        let cityANeighbors = this.findNeighbors(this.cities[i]);
+        let cityBNeighbors = this.findNeighbors(this.cities[j]);
+
+        let lengthChange = 0;
+        // cancel out old lengths
+        lengthChange -= cityANeighbors.reduce((sum, city) => sum + city.distanceFromCity(this.cities[i]), 0);
+        lengthChange -= cityBNeighbors.reduce((sum, city) => sum + city.distanceFromCity(this.cities[j]), 0);
+
+        // add back new distances
+        lengthChange += cityANeighbors.reduce((sum, city) => sum + city.distanceFromCity(this.cities[j]), 0);
+        lengthChange += cityBNeighbors.reduce((sum, city) => sum + city.distanceFromCity(this.cities[i]), 0);
+
+        return lengthChange;
+    }
+
+    swapCitiesByIndex(i: number, j: number): void {
         let tempCity = this.cities[i];
         this.cities[i] = this.cities[j];
         this.cities[j] = tempCity;
@@ -68,7 +83,7 @@ export class Tour {
         this.cities = this.cities.filter(city => city.xPos != removedCity.xPos && city.yPos != removedCity.yPos);
     }
 
-    findNeighbors(city: City) {
+    findNeighbors(city: City): City[] {
         if (this.cities.includes(city) == false) throw new Error('City is not in tour, cannot find neighbors');
         if (this.cities.length < 3) throw new Error('Tour does not have enough cities to find neighbors');
 
@@ -90,7 +105,7 @@ export class Tour {
         return neighbors;
     }
 
-    cityNeighborsAreClosest(city: City) {
+    cityNeighborsAreClosest(city: City): boolean {
         const neighbors = this.findNeighbors(city);
         const furthestNeighbor = Math.max(...neighbors.map(neighbor => city.distanceFromCity(neighbor)));
         for (let i = 0; i < this.cities.length; i++) {
@@ -102,8 +117,33 @@ export class Tour {
         return true;
     }
 
-    clear() {
+    clear(): void {
         this.cities = [];
         this.roads = [];
+        this.totalLength = undefined;
+    }
+
+    static getPermutations(tour: Tour): City[][] {
+        // permute function from https://stackoverflow.com/questions/9960908/permutations-in-javascript
+        const permute = (inputArr: City[]): City[][] => {
+            let result = [];
+
+            const order = (arr: City[], m: City[] = []): void => {
+                if (arr.length === 0) {
+                    result.push(m)
+                } else {
+                    for (let i = 0; i < arr.length; i++) {
+                        let curr = arr.slice();
+                        let next = curr.splice(i, 1);
+                        order(curr.slice(), m.concat(next))
+                    }
+                }
+            }
+
+            order(inputArr)
+
+            return result;
+        }
+        return permute(tour.cities);
     }
 }

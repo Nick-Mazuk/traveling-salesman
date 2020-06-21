@@ -2,11 +2,13 @@
 // TODO Create tutorial
 // TODO Create "about the algorithms" section
 // TODO Calculate time complexities for algorithms
-// TODO Create brute force algorithm
 // TODO Create hill climber algorithm
 // TODO Create genetic algorithm
 // TODO Create uncrossing algorithm
 // TODO Create speedy algorithm
+
+// Possible new algorithms
+// - 2 Opt, page 23 (https://ocw.mit.edu/courses/sloan-school-of-management/15-053-optimization-methods-in-management-science-spring-2013/lecture-notes/MIT15_053S13_lec17.pdf)
 
 import { Algorithms } from './Algorithms';
 import { City } from './City';
@@ -19,6 +21,7 @@ let selectedCity: City;
 let mouseClickedPosition: number[];
 let algorithmMode: string;
 let timingElement: HTMLSpanElement;
+const initialBoardCityCount = 20;
 
 let algorithmDescriptions = {
     'force': '<b>Brute Force Algorithm</b>: Checks every possible path, guarantees shortest path',
@@ -142,8 +145,7 @@ function changeAlgorithmMode() {
     document.querySelector('#algorithm-descriptions').innerHTML = algorithmDescriptions[algorithmMode];
 }
 
-function randomBoard() {
-    const cityCount = 7;
+function randomBoard(cityCount: number) {
     const width = canvas.getBoundingClientRect().width;
     const height = canvas.getBoundingClientRect().height;
     const cityRadius = City.radius;
@@ -164,7 +166,7 @@ function clearBoard() {
 function setupEventListeners() {
     document.getElementById('algorithm-mode').addEventListener('change', changeAlgorithmMode);
     document.getElementById('clear-board').addEventListener('click', clearBoard);
-    document.getElementById('random-board').addEventListener('click', randomBoard);
+    document.getElementById('random-board').addEventListener('click', () => randomBoard(initialBoardCityCount));
     window.addEventListener('resize', () => createCanvasSize(canvas))
 }
 
@@ -173,7 +175,7 @@ function setup() {
     timingElement = document.querySelector('#timing');
     setupCanvas(canvas);
     setupEventListeners();
-    randomBoard();
+    randomBoard(initialBoardCityCount);
 }
 
 window.addEventListener('DOMContentLoaded', setup);

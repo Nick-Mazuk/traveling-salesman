@@ -15,6 +15,9 @@ export class Algorithms {
             case 'bogo':
                 tour = Algorithms.bogo(tour);
                 break;
+            case 'force':
+                tour = Algorithms.force(tour);
+                break;
             default:
                 tour = Algorithms.annealing(tour, canvas, !!movedCity);
         }
@@ -34,7 +37,6 @@ export class Algorithms {
         let largeMultiplier = shortVersion ? 1.8 : 2.5;
         let maxTime = tour.cities.length * 100 + (tour.cities.length > 10 ? (tour.cities.length - 10) ** largeMultiplier : 0);
         let frame = 0;
-
         let shortestLength = tour.length();
         let shortest = new Tour(tour.cities);
 
@@ -45,28 +47,19 @@ export class Algorithms {
             let temp = calcTemp(frame, maxTime, maxTemp);
             const tour = new Tour(lastTour.cities);
 
-            // generate random city indexes
             const cityA = tour.getRandomCityIndex();
             let cityB = tour.getRandomCityIndex(cityA, temp);
 
-            while (cityA == cityB) {
-                cityB = tour.getRandomCityIndex();
-            }
-
             tour.swapCitiesByIndex(cityA, cityB);
-            const currentLength = tour.length();
+            let currentLength = tour.length();
 
-            if (currentLength < lastLength) {
-                lastTour = new Tour(tour.cities);
-                lastLength = currentLength;
-            } else if (Math.random() <= Math.exp(-Math.abs(currentLength - lastLength) / temp)) {
-                // console.log(Math.exp(-Math.abs((currentLength - lastLength) / currentLength) / (temp / maxTemp)), { currentLength, lastLength, temp })
-                lastTour = new Tour(tour.cities);
+            if (currentLength < lastLength || Math.random() <= Math.exp(-Math.abs(currentLength - lastLength) / temp)) {
+                lastTour = tour;
                 lastLength = currentLength;
             }
 
             if (currentLength < shortestLength) {
-                shortestLength = tour.length();
+                shortestLength = currentLength;
                 shortest = tour;
             }
 
@@ -95,5 +88,24 @@ export class Algorithms {
     static bogo(tour: Tour): Tour {
         tour.randomizeRoute();
         return tour;
+    }
+
+    static force(tour: Tour): Tour {
+        if (tour.cities.length > 9) {
+            alert('Brute force is slow. Very slow. It will likely take minutes if not much longer, so the algorithm was aborted. Please delete cities or choose another algorithm.');
+            return tour;
+        }
+        let shortestLength = tour.length();
+        let shortestTour = new Tour(tour.cities);
+        const permutations = Tour.getPermutations(tour);
+        permutations.forEach(order => {
+            let currentTour = new Tour(order);
+            const length = currentTour.length();
+            if (length < shortestLength) {
+                shortestLength = length;
+                shortestTour = currentTour;
+            }
+        })
+        return shortestTour;
     }
 }

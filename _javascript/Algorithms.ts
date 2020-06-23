@@ -21,6 +21,9 @@ export class Algorithms {
             case 'uncross':
                 tour = Algorithms.uncross(tour, !!movedCity);
                 break;
+            case 'speedy':
+                tour = Algorithms.speedy(tour, movedCity);
+                break;
             default:
                 tour = Algorithms.uncross(tour, !!movedCity);
         }
@@ -135,5 +138,26 @@ export class Algorithms {
             }
         } while (tour.length().toFixed(2) != previousRoundLength.toFixed(2))
         return tour;
+    }
+
+    static speedy(tour: Tour, movedCity?: City): Tour {
+        if (movedCity != void 0) {
+            let cityIndex = tour.cities.indexOf(movedCity);
+            let swappedCities = false;
+            for (let i = 0; i < tour.cities.length; i++) {
+                if (i == cityIndex) continue;
+                const currentTour = new Tour(tour.cities);
+                const change = currentTour.getLengthChangeFromSwappingCities(i, cityIndex);
+                if (change > 0) {
+                    currentTour.swapCitiesByIndex(i, cityIndex)
+                    tour = currentTour;
+                    swappedCities = true;
+                    break;
+                }
+            }
+            if (swappedCities) return Algorithms.uncross(tour);
+            return tour;
+        }
+        return Algorithms.uncross(tour);
     }
 }

@@ -18,6 +18,9 @@ export class Algorithms {
             case 'force':
                 tour = Algorithms.force(tour);
                 break;
+            case 'uncross':
+                tour = Algorithms.uncross(tour);
+                break;
             default:
                 tour = Algorithms.annealing(tour, canvas, !!movedCity);
         }
@@ -107,5 +110,25 @@ export class Algorithms {
             }
         })
         return shortestTour;
+    }
+
+    static uncross(tour: Tour): Tour {
+        tour = Algorithms.greedy(tour);
+        let shortestOverallLength: number;
+        do {
+            shortestOverallLength = tour.length();
+            for (let i = 0; i < tour.cities.length; i++) {
+                for (let j = i + 1; j < tour.cities.length; j++) {
+                    const currentTour = new Tour(tour.cities);
+                    currentTour.swapCitiesByIndex(i, j);
+                    const currentLength = currentTour.length();
+                    if (currentLength < shortestOverallLength) {
+                        tour = currentTour;
+                        shortestOverallLength = currentLength;
+                    }
+                }
+            }
+        } while (tour.length().toFixed(2) != shortestOverallLength.toFixed(2))
+        return tour;
     }
 }

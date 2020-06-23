@@ -58,25 +58,16 @@ export class Tour {
     }
 
     getLengthChangeFromSwappingCities(i: number, j: number): number {
-        let cityANeighbors = this.findNeighbors(this.cities[i]);
-        let cityBNeighbors = this.findNeighbors(this.cities[j]);
-
         let lengthChange = 0;
-        // cancel out old lengths
-        lengthChange -= cityANeighbors.reduce((sum, city) => sum + city.distanceFromCity(this.cities[i]), 0);
-        lengthChange -= cityBNeighbors.reduce((sum, city) => sum + city.distanceFromCity(this.cities[j]), 0);
-
-        // add back new distances
-        lengthChange += cityANeighbors.reduce((sum, city) => sum + city.distanceFromCity(this.cities[j]), 0);
-        lengthChange += cityBNeighbors.reduce((sum, city) => sum + city.distanceFromCity(this.cities[i]), 0);
 
         return lengthChange;
     }
 
     swapCitiesByIndex(i: number, j: number): void {
-        let tempCity = this.cities[i];
-        this.cities[i] = this.cities[j];
-        this.cities[j] = tempCity;
+        let tempCities = this.cities.slice();
+        this.cities = [...tempCities.slice(0, i)];
+        this.cities.push(...tempCities.slice(i, j).reverse());
+        this.cities.push(...tempCities.slice(j));
     }
 
     removeCity(removedCity: City) {

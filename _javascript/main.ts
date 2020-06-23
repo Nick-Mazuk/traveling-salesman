@@ -21,7 +21,7 @@ let selectedCity: City;
 let mouseClickedPosition: number[];
 let algorithmMode: string;
 let timingElement: HTMLSpanElement;
-const initialBoardCityCount = 20;
+const initialBoardCityCount = 50;
 
 let algorithmDescriptions = {
     'force': '<b>Brute Force Algorithm</b>: Checks every possible path, guarantees shortest path',
@@ -29,7 +29,7 @@ let algorithmDescriptions = {
     'hillClimber': '<b>Hill Climber Algorithm</b>: Compares tiny changes to current path, chooses better one',
     'annealing': '<b>Annealing Algorithm</b>: Like hill climber but avoids local minimums',
     'genetic': '<b>Genetic Algorithm</b>: Simulates all of human life',
-    'uncrossing': '<b>Uncrossing Algorithm</b>: Chooses random path, then uncrosses intersections',
+    'uncross': '<b>Uncrossing Algorithm</b>: Chooses random path, then uncrosses intersections',
     'speedy': '<b>Speedy Algorithm</b>: A custom algorithm that combines greedy, annealing, and uncrossing algorithms',
     'bogo': '<b>Bogo-Style Algorithm</b>: Chooses random path, odds of finding shortest path is 1:(n - 1)!',
 }

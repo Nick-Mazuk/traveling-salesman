@@ -12,9 +12,11 @@ export class Tour {
     }
 
     length(): number {
-        this._createRoads();
         let length = 0;
-        this.roads.forEach(road => length += road.length());
+        for (let i = 0; i < this.cities.length - 1; i++) {
+            length += this.cities[i].distanceFromCity(this.cities[i + 1])
+        }
+        length += this.cities[0].distanceFromCity(this.cities[this.cities.length - 1])
         this.totalLength = length;
         return length;
     }
@@ -59,15 +61,24 @@ export class Tour {
 
     getLengthChangeFromSwappingCities(i: number, j: number): number {
         let lengthChange = 0;
+        let cityA = this.cities[i];
+        let cityB = this.cities[j];
+        let previousCity = this.cities[i == 0 ? this.cities.length - 1 : i - 1];
+        let nextCity = this.cities[(j + 1) % this.cities.length];
 
+        lengthChange += cityA.distanceFromCity(previousCity)
+        lengthChange += cityB.distanceFromCity(nextCity)
+
+        lengthChange -= cityA.distanceFromCity(nextCity)
+        lengthChange -= cityB.distanceFromCity(previousCity)
         return lengthChange;
     }
 
     swapCitiesByIndex(i: number, j: number): void {
         let tempCities = this.cities.slice();
         this.cities = [...tempCities.slice(0, i)];
-        this.cities.push(...tempCities.slice(i, j).reverse());
-        this.cities.push(...tempCities.slice(j));
+        this.cities.push(...tempCities.slice(i, j + 1).reverse());
+        this.cities.push(...tempCities.slice(j + 1));
     }
 
     removeCity(removedCity: City) {

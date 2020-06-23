@@ -52,19 +52,22 @@ export class Algorithms {
 
             const cityA = tour.getRandomCityIndex();
             let cityB = tour.getRandomCityIndex(cityA, temp);
+            // let currentLength = tour.length();
 
-            tour.swapCitiesByIndex(cityA, cityB);
-            let currentLength = tour.length();
+            const change = tour.getLengthChangeFromSwappingCities(cityA, cityB);
 
-            if (currentLength < lastLength || Math.random() <= Math.exp(-Math.abs(currentLength - lastLength) / temp)) {
+            if (change > 0.000001 || Math.random() <= Math.exp(-Math.abs(change) / temp)) {
+                // console.log(change)
+                tour.swapCitiesByIndex(cityA, cityB);
                 lastTour = tour;
-                lastLength = currentLength;
+                let newLength = tour.length();
+                lastLength = newLength;
+                if (newLength < shortestLength) {
+                    shortestLength = newLength;
+                    shortest = tour;
+                }
             }
 
-            if (currentLength < shortestLength) {
-                shortestLength = currentLength;
-                shortest = tour;
-            }
 
             frame++;
         }
@@ -114,21 +117,23 @@ export class Algorithms {
 
     static uncross(tour: Tour): Tour {
         tour = Algorithms.greedy(tour);
-        let shortestOverallLength: number;
+        let shortestOverallLength = tour.length();
+        let previousRoundLength: number;
         do {
-            shortestOverallLength = tour.length();
+            previousRoundLength = shortestOverallLength;
             for (let i = 0; i < tour.cities.length; i++) {
                 for (let j = i + 1; j < tour.cities.length; j++) {
+                    if (i == j) continue;
                     const currentTour = new Tour(tour.cities);
-                    currentTour.swapCitiesByIndex(i, j);
-                    const currentLength = currentTour.length();
-                    if (currentLength < shortestOverallLength) {
+                    const change = currentTour.getLengthChangeFromSwappingCities(i, j);
+                    if (change > 0) {
+                        currentTour.swapCitiesByIndex(i, j)
                         tour = currentTour;
-                        shortestOverallLength = currentLength;
+                        shortestOverallLength = currentTour.length();
                     }
                 }
             }
-        } while (tour.length().toFixed(2) != shortestOverallLength.toFixed(2))
+        } while (tour.length().toFixed(2) != previousRoundLength.toFixed(2))
         return tour;
     }
 }

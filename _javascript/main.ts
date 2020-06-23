@@ -21,7 +21,7 @@ let selectedCity: City;
 let mouseClickedPosition: number[];
 let algorithmMode: string;
 let timingElement: HTMLSpanElement;
-const initialBoardCityCount = 7;
+const initialBoardCityCount = 100;
 
 let algorithmDescriptions = {
     'force': '<b>Brute Force Algorithm</b>: Checks every possible path, guarantees shortest path',

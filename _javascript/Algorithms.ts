@@ -22,12 +22,12 @@ export class Algorithms {
                 tour = Algorithms.uncross(tour);
                 break;
             default:
-                tour = Algorithms.annealing(tour, canvas, !!movedCity);
+                tour = Algorithms.uncross(tour);
         }
         return tour;
     }
 
-    static annealing(tour: Tour, canvas?: HTMLCanvasElement, shortVersion?: boolean, maxTemp = 150, coolingRate = 0.001): Tour {
+    static annealing(tour: Tour, canvas?: HTMLCanvasElement, shortVersion?: boolean, maxTemp = 150): Tour {
 
         function calcTemp(frame: number, maxTime: number, maxTemp: number): number {
             return maxTemp * (1 - frame / maxTime) + 0.0001;
@@ -52,12 +52,11 @@ export class Algorithms {
 
             const cityA = tour.getRandomCityIndex();
             let cityB = tour.getRandomCityIndex(cityA, temp);
-            // let currentLength = tour.length();
 
             const change = tour.getLengthChangeFromSwappingCities(cityA, cityB);
-
-            if (change > 0.000001 || Math.random() <= Math.exp(-Math.abs(change) / temp)) {
-                // console.log(change)
+            const random = Math.random()
+            const prob = Math.exp(-Math.abs(change) / temp);
+            if (change > 0 || (change != 0 && random <= prob)) {
                 tour.swapCitiesByIndex(cityA, cityB);
                 lastTour = tour;
                 let newLength = tour.length();

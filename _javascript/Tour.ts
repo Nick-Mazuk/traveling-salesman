@@ -71,10 +71,17 @@ export class Tour {
 
         lengthChange -= cityA.distanceFromCity(nextCity)
         lengthChange -= cityB.distanceFromCity(previousCity)
+        if (lengthChange < 0.001 && lengthChange > -0.001) lengthChange = 0;
         return lengthChange;
     }
 
     swapCitiesByIndex(i: number, j: number): void {
+        if (i == j) return;
+        if (i > j) {
+            let temp = i;
+            i = j;
+            j = temp;
+        }
         let tempCities = this.cities.slice();
         this.cities = [...tempCities.slice(0, i)];
         this.cities.push(...tempCities.slice(i, j + 1).reverse());

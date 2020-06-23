@@ -28,6 +28,7 @@ export class Algorithms {
     }
 
     static annealing(tour: Tour, canvas?: HTMLCanvasElement, shortVersion?: boolean, maxTemp = 150): Tour {
+        if (!shortVersion) tour = Algorithms.greedy(tour)
 
         function calcTemp(frame: number, maxTime: number, maxTemp: number): number {
             return maxTemp * (1 - frame / maxTime) + 0.0001;

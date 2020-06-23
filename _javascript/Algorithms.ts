@@ -19,16 +19,16 @@ export class Algorithms {
                 tour = Algorithms.force(tour);
                 break;
             case 'uncross':
-                tour = Algorithms.uncross(tour);
+                tour = Algorithms.uncross(tour, !!movedCity);
                 break;
             default:
-                tour = Algorithms.uncross(tour);
+                tour = Algorithms.uncross(tour, !!movedCity);
         }
         return tour;
     }
 
     static annealing(tour: Tour, canvas?: HTMLCanvasElement, shortVersion?: boolean, maxTemp = 150): Tour {
-        if (!shortVersion) tour = Algorithms.greedy(tour)
+        if (!shortVersion) tour = Algorithms.greedy(tour);
 
         function calcTemp(frame: number, maxTime: number, maxTemp: number): number {
             return maxTemp * (1 - frame / maxTime) + 0.0001;
@@ -115,8 +115,8 @@ export class Algorithms {
         return shortestTour;
     }
 
-    static uncross(tour: Tour): Tour {
-        tour = Algorithms.greedy(tour);
+    static uncross(tour: Tour, shortVersion?: boolean): Tour {
+        if (!shortVersion) tour = Algorithms.greedy(tour);
         let shortestOverallLength = tour.length();
         let previousRoundLength: number;
         do {

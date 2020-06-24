@@ -2,11 +2,9 @@
 // TODO Create tutorial
 // TODO Create "about the algorithms" section
 // TODO Calculate time complexities for algorithms
-// TODO Create hill climber algorithm
-// TODO Create genetic algorithm
-
-// Possible new algorithms
-// - 2 Opt, page 23 (https://ocw.mit.edu/courses/sloan-school-of-management/15-053-optimization-methods-in-management-science-spring-2013/lecture-notes/MIT15_053S13_lec17.pdf)
+// TODO Make cities houses
+// TODO Create road system
+// TODO Implement distance system for roads w/ obstacles
 
 import { Algorithms } from './Algorithms';
 import { City } from './City';

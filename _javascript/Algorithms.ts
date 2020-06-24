@@ -5,6 +5,8 @@ export class Algorithms {
     static optimize(tour: Tour, algorithm: string, canvas: HTMLCanvasElement, movedCity?: City): Tour {
         if (tour.cities.length < 4) return tour;
 
+        if (!movedCity) tour = Algorithms.bogo(tour);
+
         switch (algorithm) {
             case 'annealing':
                 tour = Algorithms.annealing(tour, canvas, !!movedCity);
@@ -25,7 +27,7 @@ export class Algorithms {
                 tour = Algorithms.speedy(tour, movedCity);
                 break;
             default:
-                tour = Algorithms.uncross(tour, !!movedCity);
+                tour = Algorithms.speedy(tour, movedCity);
         }
         return tour;
     }
@@ -39,6 +41,7 @@ export class Algorithms {
 
         if (canvas != void 0) {
             maxTemp = (canvas.getBoundingClientRect().width + canvas.getBoundingClientRect().height) / 18;
+            console.log(maxTemp)
         }
 
         let largeMultiplier = shortVersion ? 1.8 : 2.5;
@@ -140,6 +143,46 @@ export class Algorithms {
         return tour;
     }
 
+    static speedyAnnealing(tour): Tour {
+        function calcTemp(frame: number, maxTime: number, maxTemp: number): number {
+            return maxTemp * (1 - frame / maxTime) + 0.0001;
+        }
+
+        const maxTemp = tour.cities.length * 3;
+        const maxTime = maxTemp * 50;
+        let frame = 0;
+        let shortestLength = tour.length();
+        let shortest = new Tour(tour.cities);
+
+        let lastTour = shortest;
+        let lastLength = shortestLength;
+
+        while (frame < maxTime) {
+            let temp = calcTemp(frame, maxTime, maxTemp);
+            const tour = new Tour(lastTour.cities);
+
+            const cityA = tour.getRandomCityIndex();
+            let cityB = tour.getRandomCityIndex(cityA, temp);
+
+            const change = tour.getLengthChangeFromSwappingCities(cityA, cityB);
+            const random = Math.random()
+            const prob = Math.exp(-Math.abs(change) / temp);
+            if (change > 0 || (change != 0 && random <= prob)) {
+                tour.swapCitiesByIndex(cityA, cityB);
+                lastTour = tour;
+                let newLength = tour.length();
+                lastLength = newLength;
+                if (newLength < shortestLength) {
+                    shortestLength = newLength;
+                    shortest = tour;
+                }
+            }
+
+            frame++;
+        }
+        return shortest;
+    }
+
     static speedy(tour: Tour, movedCity?: City): Tour {
         if (movedCity != void 0) {
             let cityIndex = tour.cities.indexOf(movedCity);
@@ -155,9 +198,15 @@ export class Algorithms {
                     break;
                 }
             }
-            if (swappedCities) return Algorithms.uncross(tour);
+            if (swappedCities) {
+                tour = Algorithms.speedyAnnealing(tour);
+                return Algorithms.uncross(tour);
+            }
             return tour;
         }
-        return Algorithms.uncross(tour);
+        tour = Algorithms.greedy(tour);
+        tour = Algorithms.speedyAnnealing(tour);
+        tour = Algorithms.uncross(tour, true);
+        return tour;
     }
 }

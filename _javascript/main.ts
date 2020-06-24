@@ -21,6 +21,7 @@ let selectedCity: City;
 let mouseClickedPosition: number[];
 let algorithmMode: string;
 let timingElement: HTMLSpanElement;
+let lengthElement: HTMLSpanElement;
 const initialBoardCityCount = 100;
 
 let algorithmDescriptions = {
@@ -48,6 +49,7 @@ function optimizeTourAndDraw(onMouseMove: boolean = false) {
     let endTime = performance.now();
     timingElement.innerHTML = (endTime - startTime).toFixed(3);
     tour.draw(ctx);
+    lengthElement.innerHTML = `${tour.length().toFixed(0)}`;
 }
 
 function getMousePosition(e: MouseEvent): number[] {
@@ -110,7 +112,7 @@ function resizeCities(oldWidth, oldHeight, newWidth, newHeight) {
     }
 }
 
-function createCanvasSize(canvas: HTMLCanvasElement) {
+function createCanvasSize(canvas: HTMLCanvasElement, dontDraw?: boolean) {
     const dpr = window.devicePixelRatio || 1;
 
     let width = window.innerWidth;
@@ -127,11 +129,11 @@ function createCanvasSize(canvas: HTMLCanvasElement) {
     canvas.height = height;
     ctx = canvas.getContext('2d');
     ctx.scale(dpr, dpr);
-    optimizeTourAndDraw();
+    if (dontDraw != false) optimizeTourAndDraw();
 }
 
 function setupCanvas(canvas: HTMLCanvasElement) {
-    createCanvasSize(canvas);
+    createCanvasSize(canvas, false);
 
     canvas.addEventListener('mousedown', canvasClicked);
     canvas.addEventListener('mouseup', canvasMouseReleased);
@@ -173,6 +175,7 @@ function setupEventListeners() {
 function setup() {
     canvas = document.querySelector('canvas');
     timingElement = document.querySelector('#timing');
+    lengthElement = document.querySelector('#length');
     setupCanvas(canvas);
     setupEventListeners();
     randomBoard(initialBoardCityCount);

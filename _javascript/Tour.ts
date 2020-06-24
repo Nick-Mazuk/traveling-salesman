@@ -60,7 +60,7 @@ export class Tour {
     }
 
     getLengthChangeFromSwappingCities(i: number, j: number): number {
-        if (i == j) return;
+        if (i == j) return 0;
         if (i > j) {
             let temp = i;
             i = j;

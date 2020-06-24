@@ -187,6 +187,7 @@ export class Algorithms {
         if (movedCity != void 0) {
             let cityIndex = tour.cities.indexOf(movedCity);
             let swappedCities = false;
+            // checks swapping any cities with the movedCity yields a better result
             for (let i = 0; i < tour.cities.length; i++) {
                 if (i == cityIndex) continue;
                 const currentTour = new Tour(tour.cities);

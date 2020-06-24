@@ -4,8 +4,6 @@
 // TODO Calculate time complexities for algorithms
 // TODO Create hill climber algorithm
 // TODO Create genetic algorithm
-// TODO Create uncrossing algorithm
-// TODO Create speedy algorithm
 
 // Possible new algorithms
 // - 2 Opt, page 23 (https://ocw.mit.edu/courses/sloan-school-of-management/15-053-optimization-methods-in-management-science-spring-2013/lecture-notes/MIT15_053S13_lec17.pdf)
@@ -19,10 +17,11 @@ let ctx: CanvasRenderingContext2D;
 let tour: Tour = new Tour();
 let selectedCity: City;
 let mouseClickedPosition: number[];
+let mouseStayedStillAfterClick: boolean;
 let algorithmMode: string;
 let timingElement: HTMLSpanElement;
 let lengthElement: HTMLSpanElement;
-const initialBoardCityCount = 100;
+const initialBoardCityCount = 200;
 
 let algorithmDescriptions = {
     'force': '<b>Brute Force Algorithm</b>: Checks every possible path, guarantees shortest path',
@@ -80,16 +79,16 @@ function canvasClicked(e: MouseEvent) {
             selectedCity = clickedCities[0];
         }
     }
+    mouseStayedStillAfterClick = true;
 }
 
 function canvasMouseReleased(e: MouseEvent) {
-    let currentMousePosition = getMousePosition(e);
-    if (selectedCity && getDistanceBetweenPoints(currentMousePosition, mouseClickedPosition) < City.radius) {
+    if (selectedCity && mouseStayedStillAfterClick) {
         tour.removeCity(selectedCity);
         selectedCity = undefined;
         optimizeTourAndDraw();
     }
-    mouseClickedPosition = undefined;
+    mouseStayedStillAfterClick = undefined;
     selectedCity = undefined;
 }
 
@@ -99,6 +98,7 @@ function canvasMouseMoved(e: MouseEvent) {
         selectedCity.move(currentMousePosition[0], currentMousePosition[1]);
         optimizeTourAndDraw(true);
     }
+    mouseStayedStillAfterClick = false;
 }
 
 function resizeCities(oldWidth, oldHeight, newWidth, newHeight) {
@@ -112,7 +112,7 @@ function resizeCities(oldWidth, oldHeight, newWidth, newHeight) {
     }
 }
 
-function createCanvasSize(canvas: HTMLCanvasElement, dontDraw?: boolean) {
+function createCanvasSize(canvas: HTMLCanvasElement, doNotDraw?: boolean) {
     const dpr = window.devicePixelRatio || 1;
 
     let width = window.innerWidth;
@@ -129,7 +129,7 @@ function createCanvasSize(canvas: HTMLCanvasElement, dontDraw?: boolean) {
     canvas.height = height;
     ctx = canvas.getContext('2d');
     ctx.scale(dpr, dpr);
-    if (dontDraw != false) optimizeTourAndDraw();
+    if (doNotDraw != false) optimizeTourAndDraw();
 }
 
 function setupCanvas(canvas: HTMLCanvasElement) {

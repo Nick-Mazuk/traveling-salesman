@@ -4,7 +4,8 @@ export class City {
     xPos: number;
     yPos: number;
     canvas: HTMLCanvasElement;
-    #color = '#757575'
+    #color = '#757575';
+    selected = false;
     static radius = 10;
     static houseImage = new Image();
 
@@ -18,8 +19,10 @@ export class City {
             const imageYSize = blockSize * .5;
             const imageYOffset = imageYSize / 2;
             const imageXSize = imageYSize * 1.25;
-            const imageXOffset = imageXSize / 2
+            const imageXOffset = imageXSize / 2;
+            if (this.selected) ctx.globalAlpha = 0.5;
             ctx.drawImage(City.houseImage, this.xPos - imageXOffset, this.yPos - imageYOffset, imageXSize, imageYSize);
+            if (this.selected) ctx.globalAlpha = 1;
         } else {
             ctx.beginPath();
             ctx.arc(this.xPos, this.yPos, City.radius, 0, Math.PI * 2);

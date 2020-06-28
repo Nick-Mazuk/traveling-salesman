@@ -94,6 +94,9 @@ function canvasClicked(e: MouseEvent): void {
             createCity(e);
         } else {
             selectedCity = clickedCities[0];
+            selectedCity.selected = true;
+            if (realityMode)
+                tour.draw(ctx, blocks, blockXSize, blockYSize, realityMode);
         }
     }
     mouseStayedStillAfterClick = true;
@@ -105,7 +108,27 @@ function canvasMouseReleased(e: MouseEvent): void {
         optimizeTourAndDraw();
     }
     mouseStayedStillAfterClick = undefined;
+    if (selectedCity) selectedCity.selected = false;
     selectedCity = undefined;
+    if (realityMode)
+        tour.draw(ctx, blocks, blockXSize, blockYSize, realityMode);
+}
+
+function drawHoveredHouse(e) {
+    let currentMousePosition = getMousePosition(e);
+    const imageYSize = Math.min(blockXSize, blockYSize) * .75;
+    const imageYOffset = imageYSize / 2;
+    const imageXSize = imageYSize * 1.25;
+    const imageXOffset = imageXSize / 2;
+    const rotation = -0.3;
+
+    tour.draw(ctx, blocks, blockXSize, blockYSize, realityMode);
+
+    ctx.translate(currentMousePosition[0], currentMousePosition[1]);
+    ctx.rotate(rotation);
+    ctx.drawImage(City.houseImage, -imageXOffset, -imageYOffset, imageXSize, imageYSize);
+    ctx.rotate(-1 * rotation);
+    ctx.translate(-1 * currentMousePosition[0], -1 * currentMousePosition[1]);
 }
 
 function canvasMouseMoved(e: MouseEvent) {
@@ -120,6 +143,7 @@ function canvasMouseMoved(e: MouseEvent) {
                     }
                 }
             }
+            drawHoveredHouse(e);
         } else {
             let currentMousePosition = getMousePosition(e);
             selectedCity.move(currentMousePosition[0], currentMousePosition[1]);

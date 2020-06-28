@@ -22,7 +22,7 @@ export class Road {
         ctx.stroke();
     }
 
-    length(): number {
-        return this.cityA.distanceFromCity(this.cityB);
+    length(realityMode: boolean): number {
+        return this.cityA.distanceFromCity(this.cityB, realityMode);
     }
 }

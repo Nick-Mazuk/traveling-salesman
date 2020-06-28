@@ -12,13 +12,13 @@ export class Tour {
         this.roads = [];
     }
 
-    length(): number {
+    length(realityMode: boolean): number {
         let length = 0;
         if (this.cities.length == 0) return 0;
         for (let i = 0; i < this.cities.length - 1; i++) {
-            length += this.cities[i].distanceFromCity(this.cities[i + 1])
+            length += this.cities[i].distanceFromCity(this.cities[i + 1], realityMode)
         }
-        length += this.cities[0].distanceFromCity(this.cities[this.cities.length - 1])
+        length += this.cities[0].distanceFromCity(this.cities[this.cities.length - 1], realityMode)
         this.totalLength = length;
         return length;
     }
@@ -68,7 +68,7 @@ export class Tour {
         return this.cities[index];
     }
 
-    getLengthChangeFromSwappingCities(i: number, j: number): number {
+    getLengthChangeFromSwappingCities(i: number, j: number, realityMode: boolean): number {
         if (i == j) return 0;
         if (i > j) {
             let temp = i;
@@ -81,11 +81,11 @@ export class Tour {
         let previousCity = this.cities[i == 0 ? this.cities.length - 1 : i - 1];
         let nextCity = this.cities[(j + 1) % this.cities.length];
 
-        lengthChange += cityA.distanceFromCity(previousCity)
-        lengthChange += cityB.distanceFromCity(nextCity)
+        lengthChange += cityA.distanceFromCity(previousCity, realityMode)
+        lengthChange += cityB.distanceFromCity(nextCity, realityMode)
 
-        lengthChange -= cityA.distanceFromCity(nextCity)
-        lengthChange -= cityB.distanceFromCity(previousCity)
+        lengthChange -= cityA.distanceFromCity(nextCity, realityMode)
+        lengthChange -= cityB.distanceFromCity(previousCity, realityMode)
         if (lengthChange < 0.001 && lengthChange > -0.001) lengthChange = 0;
         return lengthChange;
     }
@@ -129,13 +129,12 @@ export class Tour {
         return neighbors;
     }
 
-    cityNeighborsAreClosest(city: City): boolean {
+    cityNeighborsAreClosest(city: City, realityMode: boolean): boolean {
         const neighbors = this.findNeighbors(city);
-        const furthestNeighbor = Math.max(...neighbors.map(neighbor => city.distanceFromCity(neighbor)));
+        const furthestNeighbor = Math.max(...neighbors.map(neighbor => city.distanceFromCity(neighbor, realityMode)));
         for (let i = 0; i < this.cities.length; i++) {
             if (neighbors.includes(this.cities[i]) || this.cities[i] == city) continue;
-            const distance = city.distanceFromCity(this.cities[i]);
-            // console.log({ furthestNeighbor, distance })
+            const distance = city.distanceFromCity(this.cities[i], realityMode);
             if (distance <= furthestNeighbor) return false;
         }
         return true;

@@ -46,14 +46,14 @@ function getDistanceBetweenPoints(pointA: number[], pointB: number[]) {
 function optimizeTourAndDraw(onMouseMove: boolean = false) {
     let startTime = performance.now();
     if (onMouseMove) {
-        tour = Algorithms.optimize(tour, algorithmMode, canvas, selectedCity);
+        tour = Algorithms.optimize(tour, algorithmMode, canvas, realityMode, selectedCity);
     } else {
-        tour = Algorithms.optimize(tour, algorithmMode, canvas);
+        tour = Algorithms.optimize(tour, algorithmMode, canvas, realityMode);
     }
     let endTime = performance.now();
     timingElement.innerHTML = (endTime - startTime).toFixed(3);
     tour.draw(ctx, blocks, blockXSize, blockYSize, realityMode);
-    lengthElement.innerHTML = `${tour.length().toFixed(0)}`;
+    lengthElement.innerHTML = `${tour.length(realityMode).toFixed(0)}`;
 }
 
 function getMousePosition(e: MouseEvent): number[] {
@@ -85,7 +85,7 @@ function canvasClicked(e: MouseEvent): void {
     if (!rightClicked) {
         if (realityMode == true) {
             mouseClickedPosition = calculateCityPosition(getMousePosition(e));
-            if (isPointInBlock(mouseClickedPosition) == false) return;
+            if (City.isPointInBlock(mouseClickedPosition, ctx, dpr) == false) return;
         } else {
             mouseClickedPosition = getMousePosition(e);
         }
@@ -113,7 +113,7 @@ function canvasMouseMoved(e: MouseEvent) {
         if (realityMode) {
             let currentMousePosition = calculateCityPosition(getMousePosition(e));
             if (currentMousePosition[0] != selectedCity.xPos || currentMousePosition[1] != selectedCity.yPos) {
-                if (isPointInBlock(currentMousePosition)) {
+                if (City.isPointInBlock(currentMousePosition, ctx, dpr)) {
                     if (tour.positionInCity(currentMousePosition[0], currentMousePosition[1]).length == 0) {
                         selectedCity.move(currentMousePosition[0], currentMousePosition[1]);
                         optimizeTourAndDraw(true);
@@ -129,25 +129,9 @@ function canvasMouseMoved(e: MouseEvent) {
     mouseStayedStillAfterClick = false;
 }
 
-function isPointInBlock(mousePosition: number[]): boolean {
-    const topPixel = ctx.getImageData(mousePosition[0] * dpr, (mousePosition[1] + Road.width + 3) * dpr, 1, 1).data;
-    if (topPixel[0] == 23 && topPixel[1] == 23 && topPixel[2] == 23)
-        return false;
-    const bottomPixel = ctx.getImageData(mousePosition[0] * dpr, (mousePosition[1] - Road.width - 3) * dpr, 1, 1).data;
-    if (bottomPixel[0] == 23 && bottomPixel[1] == 23 && bottomPixel[2] == 23)
-        return false;
-    const leftPixel = ctx.getImageData((mousePosition[0] - Road.width - 3) * dpr, mousePosition[1] * dpr, 1, 1).data;
-    if (leftPixel[0] == 23 && leftPixel[1] == 23 && leftPixel[2] == 23)
-        return false;
-    const rightPixel = ctx.getImageData((mousePosition[0] + Road.width + 3) * dpr, mousePosition[1] * dpr, 1, 1).data;
-    if (rightPixel[0] == 23 && rightPixel[1] == 23 && rightPixel[2] == 23)
-        return false;
-    return true;
-}
-
 function isMouseInBlock(e: MouseEvent) {
     const mousePosition = getMousePosition(e);
-    return isPointInBlock(mousePosition);
+    return City.isPointInBlock(mousePosition, ctx, dpr);
 }
 
 function calculateCityPosition(coordinates: number[]): number[] {

@@ -13,6 +13,7 @@ import { Block } from './Block';
 
 let canvas: HTMLCanvasElement;
 let ctx: CanvasRenderingContext2D;
+const dpr = window.devicePixelRatio || 1;
 let tour: Tour = new Tour();
 let blocks: Block[] = [];
 let selectedCity: City;
@@ -58,23 +59,35 @@ function getMousePosition(e: MouseEvent): number[] {
     return [e.clientX - canvas.getBoundingClientRect().left, e.clientY - canvas.getBoundingClientRect().top];
 }
 
-function createCity(e: MouseEvent) {
-    let xPos = e.clientX - canvas.getBoundingClientRect().left - City.radius / 2;
-    let yPos = e.clientY - canvas.getBoundingClientRect().top - City.radius / 2;
+function createCity(e: MouseEvent): void {
+    let xPos: number;
+    let yPos: number;
+    if (realityMode) {
+        xPos = mouseClickedPosition[0];
+        yPos = mouseClickedPosition[1];
+    } else {
+        xPos = e.clientX - canvas.getBoundingClientRect().left - City.radius / 2;
+        yPos = e.clientY - canvas.getBoundingClientRect().top - City.radius / 2;
+    }
     let city = new City(xPos, yPos, canvas);
     tour.addCity(city);
     optimizeTourAndDraw();
 }
 
 function mouseInCity(mousePosition?: number[]): City[] {
-    if (mousePosition == undefined) mousePosition = mouseClickedPosition
+    if (mousePosition == undefined) mousePosition = mouseClickedPosition;
     return tour.positionInCity(mousePosition[0], mousePosition[1]);
 }
 
-function canvasClicked(e: MouseEvent) {
+function canvasClicked(e: MouseEvent): void {
     let rightClicked = e.which == 3 || e.button == 2;
     if (!rightClicked) {
-        mouseClickedPosition = getMousePosition(e);
+        if (realityMode == true) {
+            mouseClickedPosition = calculateCityPosition(getMousePosition(e));
+            if (isPointInBlock(mouseClickedPosition) == false) return;
+        } else {
+            mouseClickedPosition = getMousePosition(e);
+        }
         let clickedCities = mouseInCity();
         if (!clickedCities.length) {
             createCity(e);
@@ -85,10 +98,9 @@ function canvasClicked(e: MouseEvent) {
     mouseStayedStillAfterClick = true;
 }
 
-function canvasMouseReleased(e: MouseEvent) {
+function canvasMouseReleased(e: MouseEvent): void {
     if (selectedCity && mouseStayedStillAfterClick) {
         tour.removeCity(selectedCity);
-        selectedCity = undefined;
         optimizeTourAndDraw();
     }
     mouseStayedStillAfterClick = undefined;
@@ -97,14 +109,52 @@ function canvasMouseReleased(e: MouseEvent) {
 
 function canvasMouseMoved(e: MouseEvent) {
     if (selectedCity) {
-        let currentMousePosition = getMousePosition(e);
-        selectedCity.move(currentMousePosition[0], currentMousePosition[1]);
-        optimizeTourAndDraw(true);
+        if (realityMode) {
+            let currentMousePosition = calculateCityPosition(getMousePosition(e));
+            if (currentMousePosition[0] != selectedCity.xPos || currentMousePosition[1] != selectedCity.yPos) {
+                if (isPointInBlock(currentMousePosition)) {
+                    if (tour.positionInCity(currentMousePosition[0], currentMousePosition[1]).length == 0) {
+                        selectedCity.move(currentMousePosition[0], currentMousePosition[1]);
+                        optimizeTourAndDraw(true);
+                    }
+                }
+            }
+        } else {
+            let currentMousePosition = getMousePosition(e);
+            selectedCity.move(currentMousePosition[0], currentMousePosition[1]);
+            optimizeTourAndDraw(true);
+        }
     }
     mouseStayedStillAfterClick = false;
 }
 
-function resizeCities(oldWidth, oldHeight, newWidth, newHeight) {
+function isPointInBlock(mousePosition: number[]): boolean {
+    const pixelData = ctx.getImageData(mousePosition[0] * dpr, mousePosition[1] * dpr, 1, 1).data;
+    return pixelData[0] != 23 && pixelData[1] != 23 && pixelData[2] != 23 && pixelData[3] == 255;
+}
+
+function isMouseInBlock(e: MouseEvent) {
+    const mousePosition = getMousePosition(e);
+    return isPointInBlock(mousePosition);
+}
+
+function calculateCityPosition(coordinates: number[]): number[] {
+    return calculateCoordinatesFromGridPosition(calculateGridPositionFromCoordinates(coordinates));
+}
+
+function calculateGridPositionFromCoordinates(coordinates: number[]): number[] {
+    let xPos = Math.floor(coordinates[0] / blockXSize);
+    let yPos = Math.floor(coordinates[1] / blockYSize);
+    return [xPos, yPos];
+}
+
+function calculateCoordinatesFromGridPosition(gridPosition: number[]): number[] {
+    let xPos = Math.floor(gridPosition[0] * blockXSize + blockXSize / 2);
+    let yPos = Math.floor(gridPosition[1] * blockYSize + blockYSize / 2);
+    return [xPos, yPos];
+}
+
+function resizeCities(oldWidth: number, oldHeight: number, newWidth: number, newHeight: number) {
     if (tour.cities.length) {
         const changeX = newWidth / oldWidth;
         const changeY = newHeight / oldHeight;
@@ -116,8 +166,6 @@ function resizeCities(oldWidth, oldHeight, newWidth, newHeight) {
 }
 
 function createCanvasSize(canvas: HTMLCanvasElement, doNotDraw?: boolean) {
-    const dpr = window.devicePixelRatio || 1;
-
     let width = window.innerWidth;
     let height = window.innerHeight;
     height -= document.querySelector('#top-navbar').getBoundingClientRect().height;
@@ -175,7 +223,6 @@ function createCityBlockGrid() {
     blockXSize = width / (blocksXCount * 4 + 1);
     const blocksYCount = Math.round(height / (blockXSize * 3 + 1));
     blockYSize = height / (blocksYCount * 3 + 1);
-    console.log(blockXSize, blockYSize);
     for (let i = 0; i < blocksXCount; i++) {
         let left = i * 4 + 1;
         for (let j = 0; j < blocksYCount; j++) {

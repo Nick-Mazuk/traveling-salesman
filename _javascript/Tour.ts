@@ -14,6 +14,7 @@ export class Tour {
 
     length(): number {
         let length = 0;
+        if (this.cities.length == 0) return 0;
         for (let i = 0; i < this.cities.length - 1; i++) {
             length += this.cities[i].distanceFromCity(this.cities[i + 1])
         }
@@ -103,7 +104,7 @@ export class Tour {
     }
 
     removeCity(removedCity: City) {
-        this.cities = this.cities.filter(city => city.xPos != removedCity.xPos && city.yPos != removedCity.yPos);
+        this.cities = this.cities.filter(city => city.xPos != removedCity.xPos || city.yPos != removedCity.yPos);
     }
 
     findNeighbors(city: City): City[] {

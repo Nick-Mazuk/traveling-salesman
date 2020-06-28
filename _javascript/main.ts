@@ -202,7 +202,7 @@ function setupCanvas(canvas: HTMLCanvasElement) {
     canvas.addEventListener('mousemove', canvasMouseMoved);
 
     realityMode = (<HTMLInputElement>document.getElementById('mode')).checked;
-    City.houseImage.src = '/assets/house.svg';
+    City.houseImage.src = './assets/house.svg';
 }
 
 function changeAlgorithmMode() {

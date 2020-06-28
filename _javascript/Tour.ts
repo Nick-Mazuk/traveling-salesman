@@ -1,5 +1,6 @@
 import { City } from './City';
 import { Road } from './Road';
+import { Block } from './Block';
 
 export class Tour {
     cities: City[];
@@ -36,8 +37,15 @@ export class Tour {
         this.cities.push(city);
     }
 
-    draw(ctx: CanvasRenderingContext2D): void {
+    draw(ctx: CanvasRenderingContext2D, blocks: Block[], blockXSize: number, blockYSize: number): void {
         ctx.clearRect(0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
+        if (blocks.length) {
+            ctx.beginPath();
+            ctx.rect(0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
+            ctx.fillStyle = '#171717';
+            ctx.fill();
+            blocks.forEach(block => block.draw(ctx, blockXSize, blockYSize));
+        }
         this._createRoads();
         this.roads.forEach(road => road.draw(ctx));
         this.cities.forEach(city => city.draw(ctx));

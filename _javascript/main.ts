@@ -9,16 +9,21 @@
 import { Algorithms } from './Algorithms';
 import { City } from './City';
 import { Tour } from './Tour';
+import { Block } from './Block';
 
 let canvas: HTMLCanvasElement;
 let ctx: CanvasRenderingContext2D;
 let tour: Tour = new Tour();
+let blocks: Block[] = [];
 let selectedCity: City;
 let mouseClickedPosition: number[];
 let mouseStayedStillAfterClick: boolean;
 let algorithmMode: string;
 let timingElement: HTMLSpanElement;
 let lengthElement: HTMLSpanElement;
+let realityMode: boolean;
+let blockXSize: number;
+let blockYSize: number;
 const initialBoardCityCount = 200;
 
 let algorithmDescriptions = {
@@ -45,7 +50,7 @@ function optimizeTourAndDraw(onMouseMove: boolean = false) {
     }
     let endTime = performance.now();
     timingElement.innerHTML = (endTime - startTime).toFixed(3);
-    tour.draw(ctx);
+    tour.draw(ctx, blocks, blockXSize, blockYSize);
     lengthElement.innerHTML = `${tour.length().toFixed(0)}`;
 }
 
@@ -136,6 +141,8 @@ function setupCanvas(canvas: HTMLCanvasElement) {
     canvas.addEventListener('mousedown', canvasClicked);
     canvas.addEventListener('mouseup', canvasMouseReleased);
     canvas.addEventListener('mousemove', canvasMouseMoved);
+
+    realityMode = (<HTMLInputElement>document.getElementById('mode')).checked
 }
 
 function changeAlgorithmMode() {
@@ -145,17 +152,49 @@ function changeAlgorithmMode() {
     document.querySelector('#algorithm-descriptions').innerHTML = algorithmDescriptions[algorithmMode];
 }
 
-function randomBoard(cityCount: number) {
+function randomizeCities(cityCount: number) {
     const width = canvas.getBoundingClientRect().width;
     const height = canvas.getBoundingClientRect().height;
     const cityRadius = City.radius;
 
     tour.clear();
-    for (let i = 0; i < cityCount; i++) {
-        const city = new City(Math.floor(Math.random() * (width - 2 * cityRadius)) + cityRadius, Math.floor(Math.random() * (height - 2 * cityRadius)) + cityRadius, canvas);
-        tour.addCity(city)
+    tour.draw(ctx, blocks, blockXSize, blockYSize);
+    if (!realityMode) {
+        for (let i = 0; i < cityCount; i++) {
+            const city = new City(Math.floor(Math.random() * (width - 2 * cityRadius)) + cityRadius, Math.floor(Math.random() * (height - 2 * cityRadius)) + cityRadius, canvas);
+            tour.addCity(city)
+        }
+        changeAlgorithmMode() //TODO Move this to after ELSE statement
     }
-    changeAlgorithmMode()
+}
+
+function createCityBlockGrid() {
+    const width = canvas.getBoundingClientRect().width;
+    const height = canvas.getBoundingClientRect().height;
+    const blocksXCount = Math.floor(width / 200);
+    blockXSize = width / (blocksXCount * 4 + 1);
+    const blocksYCount = Math.round(height / (blockXSize * 3 + 1));
+    blockYSize = height / (blocksYCount * 3 + 1);
+    console.log(blockXSize, blockYSize);
+    for (let i = 0; i < blocksXCount; i++) {
+        let left = i * 4 + 1;
+        for (let j = 0; j < blocksYCount; j++) {
+            let top = j * 3 + 1;
+            blocks.push(new Block(left, top, 3, 2));
+        }
+    }
+}
+
+function removeCityBlockGrid() {
+    blocks = [];
+}
+
+function createBoard(): void {
+    if (realityMode) {
+        createCityBlockGrid();
+    } else {
+        removeCityBlockGrid();
+    }
 }
 
 function clearBoard() {
@@ -163,10 +202,17 @@ function clearBoard() {
     optimizeTourAndDraw();
 }
 
+function changeMode(e) {
+    realityMode = e.currentTarget.checked;
+    createBoard();
+    randomizeCities(initialBoardCityCount);
+}
+
 function setupEventListeners() {
     document.getElementById('algorithm-mode').addEventListener('change', changeAlgorithmMode);
     document.getElementById('clear-board').addEventListener('click', clearBoard);
-    document.getElementById('random-board').addEventListener('click', () => randomBoard(initialBoardCityCount));
+    document.getElementById('random-board').addEventListener('click', () => randomizeCities(initialBoardCityCount));
+    document.getElementById('mode').addEventListener('change', changeMode);
     window.addEventListener('resize', () => createCanvasSize(canvas))
 }
 
@@ -176,7 +222,8 @@ function setup() {
     lengthElement = document.querySelector('#length');
     setupCanvas(canvas);
     setupEventListeners();
-    randomBoard(initialBoardCityCount);
+    createBoard();
+    randomizeCities(initialBoardCityCount);
 }
 
 window.addEventListener('DOMContentLoaded', setup);

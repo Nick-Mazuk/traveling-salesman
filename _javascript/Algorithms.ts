@@ -41,7 +41,6 @@ export class Algorithms {
 
         if (canvas != void 0) {
             maxTemp = (canvas.getBoundingClientRect().width + canvas.getBoundingClientRect().height) / 18;
-            console.log(maxTemp)
         }
 
         let largeMultiplier = shortVersion ? 1.8 : 2.5;

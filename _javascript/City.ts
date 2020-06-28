@@ -4,17 +4,26 @@ export class City {
     canvas: HTMLCanvasElement;
     #color = '#757575'
     static radius = 10;
+    static houseImage = new Image();
 
     constructor (xPos: number, yPos: number, canvas: HTMLCanvasElement) {
         this.canvas = canvas;
         this.move(xPos, yPos);
     }
 
-    draw(ctx: CanvasRenderingContext2D) {
-        ctx.beginPath();
-        ctx.arc(this.xPos, this.yPos, City.radius, 0, Math.PI * 2);
-        ctx.fillStyle = this.#color;
-        ctx.fill();
+    draw(ctx: CanvasRenderingContext2D, realityMode: boolean, blockSize: number): void {
+        if (realityMode) {
+            const imageYSize = blockSize * .5;
+            const imageYOffset = imageYSize / 2;
+            const imageXSize = imageYSize * 1.25;
+            const imageXOffset = imageXSize / 2
+            ctx.drawImage(City.houseImage, this.xPos - imageXOffset, this.yPos - imageYOffset, imageXSize, imageYSize);
+        } else {
+            ctx.beginPath();
+            ctx.arc(this.xPos, this.yPos, City.radius, 0, Math.PI * 2);
+            ctx.fillStyle = this.#color;
+            ctx.fill();
+        }
     }
 
     pointIsInCity(x: number, y: number): boolean {

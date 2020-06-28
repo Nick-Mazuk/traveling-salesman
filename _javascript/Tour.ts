@@ -38,7 +38,7 @@ export class Tour {
         this.cities.push(city);
     }
 
-    draw(ctx: CanvasRenderingContext2D, blocks: Block[], blockXSize: number, blockYSize: number): void {
+    draw(ctx: CanvasRenderingContext2D, blocks: Block[], blockXSize: number, blockYSize: number, realityMode: boolean): void {
         ctx.clearRect(0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
         if (blocks.length) {
             ctx.beginPath();
@@ -48,8 +48,8 @@ export class Tour {
             blocks.forEach(block => block.draw(ctx, blockXSize, blockYSize));
         }
         this._createRoads();
-        this.roads.forEach(road => road.draw(ctx));
-        this.cities.forEach(city => city.draw(ctx));
+        this.roads.forEach(road => road.draw(ctx, realityMode));
+        this.cities.forEach(city => city.draw(ctx, realityMode, Math.min(blockXSize, blockYSize)));
     }
 
     positionInCity(xPos, yPos): City[] {

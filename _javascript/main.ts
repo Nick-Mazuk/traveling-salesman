@@ -51,7 +51,7 @@ function optimizeTourAndDraw(onMouseMove: boolean = false) {
     }
     let endTime = performance.now();
     timingElement.innerHTML = (endTime - startTime).toFixed(3);
-    tour.draw(ctx, blocks, blockXSize, blockYSize);
+    tour.draw(ctx, blocks, blockXSize, blockYSize, realityMode);
     lengthElement.innerHTML = `${tour.length().toFixed(0)}`;
 }
 
@@ -190,7 +190,8 @@ function setupCanvas(canvas: HTMLCanvasElement) {
     canvas.addEventListener('mouseup', canvasMouseReleased);
     canvas.addEventListener('mousemove', canvasMouseMoved);
 
-    realityMode = (<HTMLInputElement>document.getElementById('mode')).checked
+    realityMode = (<HTMLInputElement>document.getElementById('mode')).checked;
+    City.houseImage.src = '/assets/house.svg';
 }
 
 function changeAlgorithmMode() {
@@ -206,7 +207,7 @@ function randomizeCities(cityCount: number) {
     const cityRadius = City.radius;
 
     tour.clear();
-    tour.draw(ctx, blocks, blockXSize, blockYSize);
+    tour.draw(ctx, blocks, blockXSize, blockYSize, realityMode);
     if (!realityMode) {
         for (let i = 0; i < cityCount; i++) {
             const city = new City(Math.floor(Math.random() * (width - 2 * cityRadius)) + cityRadius, Math.floor(Math.random() * (height - 2 * cityRadius)) + cityRadius, canvas);

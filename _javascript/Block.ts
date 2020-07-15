@@ -24,7 +24,6 @@ export class Block {
         ctx.quadraticCurveTo(this.xPos * blockXSize, (this.yPos + this.height) * blockYSize, this.xPos * blockXSize, (this.yPos + this.height) * blockYSize - radius);
         ctx.lineTo(this.xPos * blockXSize, this.yPos * blockYSize + radius);
         ctx.quadraticCurveTo(this.xPos * blockXSize, this.yPos * blockYSize, this.xPos * blockXSize + radius, this.yPos * blockYSize);
-        // ctx.rect(this.xPos * blockSize, this.yPos * blockSize, this.width * blockSize, this.height * blockSize);
         ctx.fillStyle = this.#color;
         ctx.fill();
     }

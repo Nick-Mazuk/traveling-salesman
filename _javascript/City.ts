@@ -6,16 +6,18 @@ export class City {
     canvas: HTMLCanvasElement;
     #color = '#757575';
     selected = false;
+    anchorX: number;
+    anchorY: number;
     static radius = 10;
     static houseImage = new Image();
 
-    constructor (xPos: number, yPos: number, canvas: HTMLCanvasElement) {
+    constructor (xPos: number, yPos: number, canvas: HTMLCanvasElement, anchorX?: number, anchorY?: number) {
         this.canvas = canvas;
-        this.move(xPos, yPos);
+        this.move(xPos, yPos, anchorX, anchorY);
     }
 
-    draw(ctx: CanvasRenderingContext2D, realityMode: boolean, blockSize: number): void {
-        if (realityMode) {
+    draw(ctx: CanvasRenderingContext2D, cityGrid: boolean, blockSize: number): void {
+        if (cityGrid) {
             const imageYSize = blockSize * .5;
             const imageYOffset = imageYSize / 2;
             const imageXSize = imageYSize * 1.25;
@@ -39,13 +41,13 @@ export class City {
         return Math.sqrt((x - this.xPos) ** 2 + (y - this.yPos) ** 2);
     }
 
-    distanceFromCity(city: City, realityMode: boolean): number {
-        if (realityMode)
-            return Math.abs(this.xPos - city.xPos) + Math.abs(this.yPos - city.yPos);
+    distanceFromCity(city: City, cityGrid: boolean): number {
+        if (cityGrid)
+            return Math.abs(this.anchorX - city.anchorX) + Math.abs(this.anchorY - city.anchorY);
         return Math.sqrt((city.xPos - this.xPos) ** 2 + (city.yPos - this.yPos) ** 2);
     }
 
-    move(xPos: number, yPos: number) {
+    move(xPos: number, yPos: number, anchorX?: number, anchorY?: number) {
         if (xPos < City.radius) xPos = City.radius;
         if (yPos < City.radius) yPos = City.radius;
 
@@ -53,6 +55,8 @@ export class City {
         if (yPos > this.canvas.getBoundingClientRect().height - City.radius) yPos = this.canvas.getBoundingClientRect().height - City.radius;
         this.xPos = xPos;
         this.yPos = yPos;
+        if (anchorX) this.anchorX = anchorX;
+        if (anchorY) this.anchorY = anchorY;
     }
 
     static isPointInBlock(coordinates: number[], ctx: CanvasRenderingContext2D, dpr: number): boolean {

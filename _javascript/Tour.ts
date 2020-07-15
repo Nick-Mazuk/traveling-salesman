@@ -12,13 +12,13 @@ export class Tour {
         this.roads = [];
     }
 
-    length(realityMode: boolean): number {
+    length(cityGrid: boolean): number {
         let length = 0;
         if (this.cities.length == 0) return 0;
         for (let i = 0; i < this.cities.length - 1; i++) {
-            length += this.cities[i].distanceFromCity(this.cities[i + 1], realityMode)
+            length += this.cities[i].distanceFromCity(this.cities[i + 1], cityGrid)
         }
-        length += this.cities[0].distanceFromCity(this.cities[this.cities.length - 1], realityMode)
+        length += this.cities[0].distanceFromCity(this.cities[this.cities.length - 1], cityGrid)
         this.totalLength = length;
         return length;
     }
@@ -30,6 +30,9 @@ export class Tour {
                 this.roads.push(new Road(this.cities[i], this.cities[i + 1]));
             }
             this.roads.push(new Road(this.cities[this.cities.length - 1], this.cities[0]));
+        } else if (this.cities.length > 1) {
+            this.roads.push(new Road(this.cities[0], this.cities[1]));
+            this.roads.push(new Road(this.cities[1], this.cities[0]));
         }
         return this.roads;
     }
@@ -38,7 +41,7 @@ export class Tour {
         this.cities.push(city);
     }
 
-    draw(ctx: CanvasRenderingContext2D, blocks: Block[], blockXSize: number, blockYSize: number, realityMode: boolean): void {
+    draw(ctx: CanvasRenderingContext2D, blocks: Block[], blockXSize: number, blockYSize: number, cityGrid: boolean): void {
         ctx.clearRect(0, 0, ctx.canvas.clientWidth, ctx.canvas.clientHeight);
         if (blocks.length) {
             ctx.beginPath();
@@ -48,8 +51,8 @@ export class Tour {
             blocks.forEach(block => block.draw(ctx, blockXSize, blockYSize));
         }
         this._createRoads();
-        this.roads.forEach(road => road.draw(ctx, realityMode));
-        this.cities.forEach(city => city.draw(ctx, realityMode, Math.min(blockXSize, blockYSize)));
+        this.roads.forEach(road => road.draw(ctx, cityGrid));
+        this.cities.forEach(city => city.draw(ctx, cityGrid, Math.min(blockXSize, blockYSize)));
     }
 
     positionInCity(xPos, yPos): City[] {
@@ -68,7 +71,7 @@ export class Tour {
         return this.cities[index];
     }
 
-    getLengthChangeFromSwappingCities(i: number, j: number, realityMode: boolean): number {
+    getLengthChangeFromSwappingCities(i: number, j: number, cityGrid: boolean): number {
         if (i == j) return 0;
         if (i > j) {
             let temp = i;
@@ -81,11 +84,11 @@ export class Tour {
         let previousCity = this.cities[i == 0 ? this.cities.length - 1 : i - 1];
         let nextCity = this.cities[(j + 1) % this.cities.length];
 
-        lengthChange += cityA.distanceFromCity(previousCity, realityMode)
-        lengthChange += cityB.distanceFromCity(nextCity, realityMode)
+        lengthChange += cityA.distanceFromCity(previousCity, cityGrid)
+        lengthChange += cityB.distanceFromCity(nextCity, cityGrid)
 
-        lengthChange -= cityA.distanceFromCity(nextCity, realityMode)
-        lengthChange -= cityB.distanceFromCity(previousCity, realityMode)
+        lengthChange -= cityA.distanceFromCity(nextCity, cityGrid)
+        lengthChange -= cityB.distanceFromCity(previousCity, cityGrid)
         if (lengthChange < 0.001 && lengthChange > -0.001) lengthChange = 0;
         return lengthChange;
     }
@@ -129,12 +132,12 @@ export class Tour {
         return neighbors;
     }
 
-    cityNeighborsAreClosest(city: City, realityMode: boolean): boolean {
+    cityNeighborsAreClosest(city: City, cityGrid: boolean): boolean {
         const neighbors = this.findNeighbors(city);
-        const furthestNeighbor = Math.max(...neighbors.map(neighbor => city.distanceFromCity(neighbor, realityMode)));
+        const furthestNeighbor = Math.max(...neighbors.map(neighbor => city.distanceFromCity(neighbor, cityGrid)));
         for (let i = 0; i < this.cities.length; i++) {
             if (neighbors.includes(this.cities[i]) || this.cities[i] == city) continue;
-            const distance = city.distanceFromCity(this.cities[i], realityMode);
+            const distance = city.distanceFromCity(this.cities[i], cityGrid);
             if (distance <= furthestNeighbor) return false;
         }
         return true;

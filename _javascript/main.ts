@@ -1,15 +1,6 @@
-// TODO Animate algorithms
-// TODO Create tutorial
-// TODO Create "about the algorithms" section
-// TODO Calculate time complexities for algorithms
-// TODO Make cities houses
-// TODO Create road system
-// TODO Implement distance system for roads w/ obstacles
-
 import { Algorithms } from './Algorithms';
 import { City } from './City';
 import { Tour } from './Tour';
-import { Road } from './Road';
 import { Block } from './Block';
 
 let canvas: HTMLCanvasElement;
@@ -23,10 +14,14 @@ let mouseStayedStillAfterClick: boolean;
 let algorithmMode: string;
 let timingElement: HTMLSpanElement;
 let lengthElement: HTMLSpanElement;
-let realityMode: boolean;
+let cityGrid: boolean;
+let blocksYCount: number;
+let blocksXCount: number;
 let blockXSize: number;
 let blockYSize: number;
-const initialBoardCityCount = 200;
+const theoreticalBoardCount = 200;
+const cityGridBoardCount = 20X;
+let initialBoardCityCount = cityGridBoardCount;
 let hoveredHouse: HTMLImageElement;
 
 let algorithmDescriptions = {
@@ -40,21 +35,17 @@ let algorithmDescriptions = {
     'bogo': '<b>Bogo-Style Algorithm</b>: Chooses random path, odds of finding shortest path is 1:(n - 1)!',
 }
 
-function getDistanceBetweenPoints(pointA: number[], pointB: number[]) {
-    return Math.sqrt((pointA[0] - pointB[0]) ** 2 + (pointA[1] - pointB[1]) ** 2);
-}
-
 function optimizeTourAndDraw(onMouseMove: boolean = false) {
     let startTime = performance.now();
     if (onMouseMove) {
-        tour = Algorithms.optimize(tour, algorithmMode, canvas, realityMode, selectedCity);
+        tour = Algorithms.optimize(tour, algorithmMode, canvas, cityGrid, selectedCity);
     } else {
-        tour = Algorithms.optimize(tour, algorithmMode, canvas, realityMode);
+        tour = Algorithms.optimize(tour, algorithmMode, canvas, cityGrid);
     }
     let endTime = performance.now();
     timingElement.innerHTML = (endTime - startTime).toFixed(3);
-    tour.draw(ctx, blocks, blockXSize, blockYSize, realityMode);
-    lengthElement.innerHTML = `${tour.length(realityMode).toFixed(0)}`;
+    tour.draw(ctx, blocks, blockXSize, blockYSize, cityGrid);
+    lengthElement.innerHTML = `${tour.length(cityGrid).toFixed(0)}`;
 }
 
 function getMousePosition(e: MouseEvent): number[] {
@@ -64,14 +55,22 @@ function getMousePosition(e: MouseEvent): number[] {
 function createCity(e: MouseEvent): void {
     let xPos: number;
     let yPos: number;
-    if (realityMode) {
+    let city: City;
+    if (cityGrid) {
         xPos = mouseClickedPosition[0];
         yPos = mouseClickedPosition[1];
+        let anchorX = xPos;
+        let anchorY = yPos - blockYSize;
+        const isAnchorAbove = City.isPointInBlock([xPos, yPos - blockYSize], ctx, dpr);
+        if (isAnchorAbove) {
+            anchorY = yPos + blockYSize;
+        }
+        city = new City(xPos, yPos, canvas, anchorX, anchorY);
     } else {
         xPos = e.clientX - canvas.getBoundingClientRect().left - City.radius / 2;
         yPos = e.clientY - canvas.getBoundingClientRect().top - City.radius / 2;
+        city = new City(xPos, yPos, canvas);
     }
-    let city = new City(xPos, yPos, canvas);
     tour.addCity(city);
     optimizeTourAndDraw();
 }
@@ -84,7 +83,7 @@ function mouseInCity(mousePosition?: number[]): City[] {
 function canvasClicked(e: MouseEvent): void {
     let rightClicked = e.which == 3 || e.button == 2;
     if (!rightClicked) {
-        if (realityMode == true) {
+        if (cityGrid == true) {
             mouseClickedPosition = calculateCityPosition(getMousePosition(e));
             if (City.isPointInBlock(mouseClickedPosition, ctx, dpr) == false) return;
         } else {
@@ -96,8 +95,8 @@ function canvasClicked(e: MouseEvent): void {
         } else {
             selectedCity = clickedCities[0];
             selectedCity.selected = true;
-            if (realityMode)
-                tour.draw(ctx, blocks, blockXSize, blockYSize, realityMode);
+            if (cityGrid)
+                tour.draw(ctx, blocks, blockXSize, blockYSize, cityGrid);
         }
     }
     mouseStayedStillAfterClick = true;
@@ -111,9 +110,9 @@ function canvasMouseReleased(e: MouseEvent): void {
     mouseStayedStillAfterClick = undefined;
     if (selectedCity) selectedCity.selected = false;
     selectedCity = undefined;
-    if (realityMode) {
+    if (cityGrid) {
         hoveredHouse.classList.add('is-hidden');
-        tour.draw(ctx, blocks, blockXSize, blockYSize, realityMode);
+        tour.draw(ctx, blocks, blockXSize, blockYSize, cityGrid);
     }
 }
 
@@ -124,12 +123,18 @@ function drawHoveredHouse(e) {
 
 function canvasMouseMoved(e: MouseEvent) {
     if (selectedCity) {
-        if (realityMode) {
+        if (cityGrid) {
             let currentMousePosition = calculateCityPosition(getMousePosition(e));
             if (currentMousePosition[0] != selectedCity.xPos || currentMousePosition[1] != selectedCity.yPos) {
                 if (City.isPointInBlock(currentMousePosition, ctx, dpr)) {
                     if (tour.positionInCity(currentMousePosition[0], currentMousePosition[1]).length == 0) {
-                        selectedCity.move(currentMousePosition[0], currentMousePosition[1]);
+                        let anchorX = currentMousePosition[0];
+                        let anchorY = currentMousePosition[1] - blockYSize;
+                        const isAnchorAbove = City.isPointInBlock([currentMousePosition[0], currentMousePosition[1] - blockYSize], ctx, dpr);
+                        if (isAnchorAbove) {
+                            anchorY = currentMousePosition[1] + blockYSize;
+                        }
+                        selectedCity.move(currentMousePosition[0], currentMousePosition[1], anchorX, anchorY);
                         optimizeTourAndDraw(true);
                     }
                 }
@@ -201,7 +206,7 @@ function setupCanvas(canvas: HTMLCanvasElement) {
     canvas.addEventListener('mouseup', canvasMouseReleased);
     canvas.addEventListener('mousemove', canvasMouseMoved);
 
-    realityMode = (<HTMLInputElement>document.getElementById('mode')).checked;
+    cityGrid = (<HTMLInputElement>document.getElementById('mode')).checked;
     City.houseImage.src = './assets/house.svg';
 }
 
@@ -218,22 +223,48 @@ function randomizeCities(cityCount: number) {
     const cityRadius = City.radius;
 
     tour.clear();
-    tour.draw(ctx, blocks, blockXSize, blockYSize, realityMode);
-    if (!realityMode) {
+    tour.draw(ctx, blocks, blockXSize, blockYSize, cityGrid);
+    if (!cityGrid) {
         for (let i = 0; i < cityCount; i++) {
             const city = new City(Math.floor(Math.random() * (width - 2 * cityRadius)) + cityRadius, Math.floor(Math.random() * (height - 2 * cityRadius)) + cityRadius, canvas);
             tour.addCity(city)
         }
-        changeAlgorithmMode() //TODO Move this to after ELSE statement
+    } else {
+        const houseSpacesX = blocksXCount * 3;
+        const houseSpacesY = blocksYCount * 2;
+        const tempCities: number[][] = [];
+
+        const revisedCityCount = Math.min(cityCount, houseSpacesX * houseSpacesY);
+        while (tempCities.length < revisedCityCount) {
+            const xPos = Math.floor(Math.random() * houseSpacesX);
+            const yPos = Math.floor(Math.random() * houseSpacesY);
+
+            if (tempCities.filter(city => city[0] == xPos && city[1] == yPos).length == 0)
+                tempCities.push([xPos, yPos]);
+        }
+
+        tempCities.forEach(coordinates => {
+            const xPos = (coordinates[0] + Math.floor(coordinates[0] / 3) + 1) * blockXSize + blockXSize / 2;
+            const yPos = (coordinates[1] + Math.floor(coordinates[1] / 2) + 1) * blockYSize + blockYSize / 2;
+            let anchorX = xPos;
+            let anchorY = yPos - blockYSize;
+            const isAnchorAbove = City.isPointInBlock([xPos, yPos - blockYSize], ctx, dpr);
+            if (isAnchorAbove) {
+                anchorY = yPos + blockYSize;
+            }
+            const city = new City(xPos, yPos, canvas, anchorX, anchorY);
+            tour.addCity(city);
+        })
     }
+    changeAlgorithmMode()
 }
 
 function createCityBlockGrid() {
     const width = canvas.getBoundingClientRect().width;
     const height = canvas.getBoundingClientRect().height;
-    const blocksXCount = Math.floor(width / 200);
+    blocksXCount = Math.floor(width / 200);
     blockXSize = width / (blocksXCount * 4 + 1);
-    const blocksYCount = Math.round(height / (blockXSize * 3 + 1));
+    blocksYCount = Math.round(height / (blockXSize * 3 + 1));
     blockYSize = height / (blocksYCount * 3 + 1);
     for (let i = 0; i < blocksXCount; i++) {
         let left = i * 4 + 1;
@@ -249,7 +280,7 @@ function removeCityBlockGrid() {
 }
 
 function createBoard(): void {
-    if (realityMode) {
+    if (cityGrid) {
         createCityBlockGrid();
     } else {
         removeCityBlockGrid();
@@ -262,7 +293,8 @@ function clearBoard() {
 }
 
 function changeMode(e) {
-    realityMode = e.currentTarget.checked;
+    cityGrid = e.currentTarget.checked;
+    initialBoardCityCount = cityGrid ? cityGridBoardCount : theoreticalBoardCount;
     createBoard();
     randomizeCities(initialBoardCityCount);
 }

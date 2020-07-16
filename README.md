@@ -31,7 +31,7 @@ Select an algorithm from the dropdown menu.
 - **Annealing**: Gradually improves through random changes, avoids local mins
 - **2-opt**: Chooses random path, then uncrosses intersections
 - **Speedy**: Custom algorithm, combines greedy, annealing, and uncrossing
-= **BOGO**: Chooses random path, odds of finding shortest path is 1:(n - 1)!
+- **BOGO**: Chooses random path, odds of finding shortest path is 1:(n - 1)!
 
 ## …because some are just better than others.
 

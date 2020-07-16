@@ -3,6 +3,7 @@ import { City } from './City';
 import { Tour } from './Tour';
 import { Block } from './Block';
 import { Tutorial } from './Tutorial';
+import { LearnAlgorithms } from './LearnAlgorithms';
 
 let canvas: HTMLCanvasElement;
 let ctx: CanvasRenderingContext2D;
@@ -32,7 +33,7 @@ let algorithmDescriptions = {
     'annealing': '<b>Annealing Algorithm</b>: Gradually improves through random changes but avoids local minimums',
     'genetic': '<b>Genetic Algorithm</b>: Simulates all of human life',
     'uncross': '<b>2-Opt Algorithm</b>: Chooses random path, then uncrosses intersections',
-    'speedy': '<b>Speedy Algorithm</b>: A custom algorithm that combines greedy, annealing, and uncrossing algorithms',
+    'speedy': '<b>Speedy Algorithm</b>: A custom algorithm that combines greedy, annealing, and 2-opt algorithms',
     'bogo': '<b>Bogo-Style Algorithm</b>: Chooses random path, odds of finding shortest path is 1:(n - 1)!',
 }
 
@@ -347,6 +348,7 @@ function setup() {
     createBoard();
     randomizeCities(initialBoardCityCount);
     let tutorial = new Tutorial();
+    let learnAlgorithms = new LearnAlgorithms();
 }
 
 window.addEventListener('DOMContentLoaded', setup);

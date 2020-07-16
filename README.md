@@ -30,7 +30,7 @@ Select an algorithm from the dropdown menu.
 - **Greedy**: Each house connects with the next closest house
 - **Annealing**: Gradually improves through random changes, avoids local mins
 - **2-opt**: Chooses random path, then uncrosses intersections
-- **Speedy**: Custom algorithm, combines greedy, annealing, and uncrossing
+- **Speedy**: Custom algorithm, combines greedy, annealing, and 2-opt
 - **BOGO**: Chooses random path, odds of finding shortest path is 1:(n - 1)!
 
 ## …because some are just better than others.

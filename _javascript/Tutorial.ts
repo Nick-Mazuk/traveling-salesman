@@ -30,7 +30,7 @@ export class Tutorial {
             <li><b>Greedy</b>: Each house connects with the next closest house</li>
             <li><b>Annealing</b>: Gradually improves through random changes, avoids local mins</li>
             <li><b>2-opt</b>: Chooses random path, then uncrosses intersections</li>
-            <li><b>Speedy</b>: Custom algorithm, combines greedy, annealing, and uncrossing</li>
+            <li><b>Speedy</b>: Custom algorithm, combines greedy, annealing, and 2-opt</li>
             <li><b>BOGO</b>: Chooses random path, odds of finding shortest path is 1:(n - 1)!</li>
         </ul>`,
 

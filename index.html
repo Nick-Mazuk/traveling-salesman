@@ -44,7 +44,7 @@
                         </a>
 
                         <div class="navbar-dropdown">
-                            <a class="navbar-item">
+                            <a class="navbar-item" id='learn-algorithms'>
                                 Learn the Algorithms
                             </a>
                             <hr class="navbar-divider">
@@ -64,9 +64,7 @@
                             <select id='algorithm-mode'>
                                 <option value='force'>Brute Force</option>
                                 <option value='greedy'>Greedy</option>
-                                <!-- <option value='hillClimber'>Hill Climber (unfinished)</option> -->
                                 <option value='annealing'>Annealing</option>
-                                <!-- <option value='genetic'>Genetic (unfinished)</option> -->
                                 <option value='uncross'>2-opt</option>
                                 <option value='speedy' selected>Speedy</option>
                                 <option value='bogo'>Bogo-style</option>
@@ -142,6 +140,36 @@
                     </div>
                 </footer>
             </div>
+        </div>
+
+        <div id='algorithms-modal' class="modal">
+            <div class="modal-background"></div>
+            <div class="modal-content">
+                <div class="box">
+                    <div class="tabs is-centered">
+                        <ul>
+                            <li data-algorithm='force' class="algorithms-tab is-active"><a>Brute Force</a></li>
+                            <li data-algorithm='greedy' class="algorithms-tab"><a>Greedy</a></li>
+                            <li data-algorithm='annealing' class="algorithms-tab"><a>Annealing</a></li>
+                            <li data-algorithm='uncross' class="algorithms-tab"><a>2-Opt</a></li>
+                            <li data-algorithm='speedy' class="algorithms-tab"><a>Speedy</a></li>
+                            <li data-algorithm='bogo' class="algorithms-tab"><a>Bogo-style</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="content">
+                        <h3>Overview</h3>
+                        <div class="" id="algorithm-overview"></div>
+
+                        <h3>Algorithm Specifics</h3>
+                        <div id="algorithm-specifics"></div>
+
+                        <h3>Notable Features</h3>
+                        <div id="algorithm-features"></div>
+                    </div>
+                </div>
+            </div>
+            <button id='algorithms-modal-close' class="modal-close is-large" aria-label="close"></button>
         </div>
 
         <img src="./assets/house.svg" id='hoveredHouse' class='is-hidden'>

@@ -24,6 +24,12 @@ body {
     overflow: hidden;
 }
 
+code.multi-line {
+    display: block;
+    white-space: pre;
+    overflow-x: scroll;
+}
+
 canvas {
     width: 100%;
     height: 100%;
@@ -57,5 +63,12 @@ canvas {
         .level {
             width: 100%;
         }
+    }
+}
+
+#algorithms-modal {
+    .box {
+        height: 600px;
+        overflow: scroll;
     }
 }

@@ -52,3 +52,5 @@ Find the shortest route through some bustling suburbs, or test the limits of the
 Learn the specifics behind each algorithm.
 
 Check out the code on Github (and star the repo).
+
+[Now start exploring! Ready, set, go…](https://nickmazuk.com/traveling-salesman/)

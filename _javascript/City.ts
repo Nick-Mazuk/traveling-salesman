@@ -8,12 +8,16 @@ export class City {
     selected = false;
     anchorX: number;
     anchorY: number;
+    blockColumn: number;
+    blockColumnPosition: number;
+    blockXSize: number;
+    blockYSize: number;
     static radius = 10;
     static houseImage = new Image();
 
-    constructor (xPos: number, yPos: number, canvas: HTMLCanvasElement, anchorX?: number, anchorY?: number) {
+    constructor (xPos: number, yPos: number, canvas: HTMLCanvasElement, anchorX?: number, anchorY?: number, blockColumn?: number, blockColumnPosition?: number, blockXSize?: number, blockYSize?: number) {
         this.canvas = canvas;
-        this.move(xPos, yPos, anchorX, anchorY);
+        this.move(xPos, yPos, anchorX, anchorY, blockColumn, blockColumnPosition, blockXSize, blockYSize);
     }
 
     draw(ctx: CanvasRenderingContext2D, cityGrid: boolean, blockSize: number): void {
@@ -42,12 +46,23 @@ export class City {
     }
 
     distanceFromCity(city: City, cityGrid: boolean): number {
-        if (cityGrid)
-            return Math.abs(this.anchorX - city.anchorX) + Math.abs(this.anchorY - city.anchorY);
+        if (cityGrid) {
+            let distance = Math.abs(this.anchorX - city.anchorX) + Math.abs(this.anchorY - city.anchorY);
+            const isInSameBlockColumn = this.blockColumn == city.blockColumn;
+            const shareSameRoad = this.onSameHorizontalRoad(city);
+            if (isInSameBlockColumn && !shareSameRoad) {
+                if (this.blockColumnPosition == 1 && city.blockColumnPosition == 1) { // middle and outer
+                    distance += this.blockXSize * 4;
+                } else {
+                    distance += this.blockXSize * 2;
+                }
+            }
+            return distance;
+        }
         return Math.sqrt((city.xPos - this.xPos) ** 2 + (city.yPos - this.yPos) ** 2);
     }
 
-    move(xPos: number, yPos: number, anchorX?: number, anchorY?: number) {
+    move(xPos: number, yPos: number, anchorX?: number, anchorY?: number, blockColumn?: number, blockColumnPosition?: number, blockXSize?: number, blockYSize?: number) {
         if (xPos < City.radius) xPos = City.radius;
         if (yPos < City.radius) yPos = City.radius;
 
@@ -57,6 +72,14 @@ export class City {
         this.yPos = yPos;
         if (anchorX) this.anchorX = anchorX;
         if (anchorY) this.anchorY = anchorY;
+        if (blockColumn != undefined) this.blockColumn = blockColumn;
+        if (blockColumnPosition != undefined) this.blockColumnPosition = blockColumnPosition;
+        if (blockXSize) this.blockXSize = blockXSize;
+        if (blockYSize) this.blockYSize = blockYSize;
+    }
+
+    onSameHorizontalRoad(city: City): boolean {
+        return Math.abs(this.anchorY - city.anchorY) < 3;
     }
 
     static isPointInBlock(coordinates: number[], ctx: CanvasRenderingContext2D, dpr: number): boolean {

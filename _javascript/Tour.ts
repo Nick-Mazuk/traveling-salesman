@@ -51,7 +51,7 @@ export class Tour {
             blocks.forEach(block => block.draw(ctx, blockXSize, blockYSize));
         }
         this._createRoads();
-        this.roads.forEach(road => road.draw(ctx, cityGrid));
+        this.roads.forEach(road => road.draw(ctx, cityGrid, blockXSize));
         this.cities.forEach(city => city.draw(ctx, cityGrid, Math.min(blockXSize, blockYSize)));
     }
 

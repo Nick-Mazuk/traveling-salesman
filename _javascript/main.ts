@@ -20,7 +20,7 @@ let blocksXCount: number;
 let blockXSize: number;
 let blockYSize: number;
 const theoreticalBoardCount = 200;
-const cityGridBoardCount = 20X;
+const cityGridBoardCount = 20;
 let initialBoardCityCount = cityGridBoardCount;
 let hoveredHouse: HTMLImageElement;
 
@@ -65,7 +65,18 @@ function createCity(e: MouseEvent): void {
         if (isAnchorAbove) {
             anchorY = yPos + blockYSize;
         }
-        city = new City(xPos, yPos, canvas, anchorX, anchorY);
+
+        // pixelSpace to grid space
+        let x = Math.round(xPos / blockXSize);
+
+        // grid space to block space
+        const xCoordinate = x - 1 - Math.floor(x / 4);
+
+        // block space to block position
+        const blockColumn = Math.floor(x / 4);
+        const blockColumnPosition = xCoordinate % 3;
+
+        city = new City(xPos, yPos, canvas, anchorX, anchorY, blockColumn, blockColumnPosition, blockXSize);
     } else {
         xPos = e.clientX - canvas.getBoundingClientRect().left - City.radius / 2;
         yPos = e.clientY - canvas.getBoundingClientRect().top - City.radius / 2;
@@ -134,7 +145,18 @@ function canvasMouseMoved(e: MouseEvent) {
                         if (isAnchorAbove) {
                             anchorY = currentMousePosition[1] + blockYSize;
                         }
-                        selectedCity.move(currentMousePosition[0], currentMousePosition[1], anchorX, anchorY);
+
+                        // pixelSpace to grid space
+                        let x = Math.round(currentMousePosition[0] / blockXSize);
+
+                        // grid space to block space
+                        const xCoordinate = x - 1 - Math.floor(x / 4);
+
+                        // block space to block position
+                        const blockColumn = Math.floor(x / 4);
+                        const blockColumnPosition = xCoordinate % 3;
+
+                        selectedCity.move(currentMousePosition[0], currentMousePosition[1], anchorX, anchorY, blockColumn, blockColumnPosition, blockXSize);
                         optimizeTourAndDraw(true);
                     }
                 }
@@ -252,7 +274,9 @@ function randomizeCities(cityCount: number) {
             if (isAnchorAbove) {
                 anchorY = yPos + blockYSize;
             }
-            const city = new City(xPos, yPos, canvas, anchorX, anchorY);
+            const blockColumn = Math.floor(coordinates[0] / 3);
+            const blockColumnPosition = coordinates[0] % 3;
+            const city = new City(xPos, yPos, canvas, anchorX, anchorY, blockColumn, blockColumnPosition, blockXSize, blockYSize);
             tour.addCity(city);
         })
     }
@@ -299,12 +323,17 @@ function changeMode(e) {
     randomizeCities(initialBoardCityCount);
 }
 
+function recalculate(e) {
+    optimizeTourAndDraw(false);
+}
+
 function setupEventListeners() {
     document.getElementById('algorithm-mode').addEventListener('change', changeAlgorithmMode);
     document.getElementById('clear-board').addEventListener('click', clearBoard);
     document.getElementById('random-board').addEventListener('click', () => randomizeCities(initialBoardCityCount));
     document.getElementById('mode').addEventListener('change', changeMode);
-    window.addEventListener('resize', () => createCanvasSize(canvas))
+    window.addEventListener('resize', () => createCanvasSize(canvas));
+    document.getElementById('recalculate-button').addEventListener('click', recalculate)
 }
 
 function setup() {

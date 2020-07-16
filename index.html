@@ -34,7 +34,7 @@
                         Clear Board
                     </a>
 
-                    <a class="navbar-item is-unselectable">
+                    <a id='tutorial-replay' class="navbar-item is-unselectable">
                         Replay Tutorial
                     </a>
 
@@ -89,6 +89,60 @@
                 </div>
             </div>
         </nav>
+
+        <div id="tutorial-modal" class="modal is-active">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Real-time Traveling Salesman Visualizer</p>
+                    <button id='tutorial-close' class="delete" aria-label="close"></button>
+                </header>
+                <section class="modal-card-body">
+                    <div id='tutorial-content' class="content">
+
+                    </div>
+                </section>
+                <footer class="modal-card-foot">
+                    <div class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <button id='tutorial-skip' class="button">Skip Tutorial</button>
+                            </div>
+                        </div>
+                        <div class="level-right">
+                            <div class="level-item">
+                                <button id='tutorial-previous' class="button has-text-weight-bold is-hidden">
+                                    <svg id="i-chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"
+                                        width="12" height="12" fill="none" stroke="currentcolor" stroke-linecap="butt"
+                                        stroke-linejoin="miter" stroke-width="8">
+                                        <path d="M20 30 L8 16 20 2" />
+                                    </svg>
+                                    &nbsp;Previous</button>
+                            </div>
+                            <div class="level-item">
+                                <button id='tutorial-next' class="button is-primary has-text-weight-bold">
+                                    Next&nbsp;
+                                    <svg id="i-chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"
+                                        width="12" height="12" fill="none" stroke="currentcolor" stroke-linecap="butt"
+                                        stroke-linejoin="miter" stroke-width="8">
+                                        <path d="M12 30 L24 16 12 2" />
+                                    </svg>
+                                </button>
+                                <button id='tutorial-finish' class="button is-primary has-text-weight-bold is-hidden">
+                                    Finish &nbsp;
+                                    <svg id="i-chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"
+                                        width="12" height="12" fill="none" stroke="currentcolor" stroke-linecap="butt"
+                                        stroke-linejoin="miter" stroke-width="8">
+                                        <path d="M2 20 L12 28 30 4" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+
         <img src="./assets/house.svg" id='hoveredHouse' class='is-hidden'>
         <div class="section pt-0 pb-0 pl-0 pr-0 mb-0">
             <canvas id='canvas'>

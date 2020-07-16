@@ -2,6 +2,7 @@ import { Algorithms } from './Algorithms';
 import { City } from './City';
 import { Tour } from './Tour';
 import { Block } from './Block';
+import { Tutorial } from './Tutorial';
 
 let canvas: HTMLCanvasElement;
 let ctx: CanvasRenderingContext2D;
@@ -345,6 +346,7 @@ function setup() {
     setupEventListeners();
     createBoard();
     randomizeCities(initialBoardCityCount);
+    let tutorial = new Tutorial();
 }
 
 window.addEventListener('DOMContentLoaded', setup);

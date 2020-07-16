@@ -7938,3 +7938,9 @@ canvas {
   width: 50px;
   transform: translate(-50%, -50%) rotate(-30deg);
   pointer-events: none; }
+
+#tutorial-modal .modal-card-body {
+  height: 400px; }
+
+#tutorial-modal .modal-card-foot .level {
+  width: 100%; }

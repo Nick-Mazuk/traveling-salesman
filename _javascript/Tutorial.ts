@@ -11,7 +11,7 @@ export class Tutorial {
     currentPanel: number = 0;
     panels = [
         `<h2>What is the traveling salesman problem?</h2>
-        <Amazon>How can Amazon deliver toilet paper in 2 days? This isn't a simple problem. At the very last stretch, Amazon loads your toilet paper into a van. But that van has dozens of other deliveries. So Amazon needs to <b>find the shortest route between every house</b>. Finding that shortest route is the traveling salesman problem.</p>`,
+        <p>How can Amazon deliver toilet paper in 2 days? This isn't a simple problem. At the very last stretch, Amazon loads your toilet paper into a van. But that van has dozens of other deliveries. So Amazon needs to <b>find the shortest route between every house</b>. Finding that shortest route is the traveling salesman problem.</p>`,
 
         `<h2>Add, move, or remove houses…</h2>
         <ul>

@@ -29,9 +29,9 @@ let algorithmDescriptions = {
     'force': '<b>Brute Force Algorithm</b>: Checks every possible path, guarantees shortest path',
     'greedy': '<b>Greedy Algorithm</b>: Each node goes to the next closest node, finds suboptimal path excluding trivial cases',
     'hillClimber': '<b>Hill Climber Algorithm</b>: Compares tiny changes to current path, chooses better one',
-    'annealing': '<b>Annealing Algorithm</b>: Like hill climber but avoids local minimums',
+    'annealing': '<b>Annealing Algorithm</b>: Gradually improves through random changes but avoids local minimums',
     'genetic': '<b>Genetic Algorithm</b>: Simulates all of human life',
-    'uncross': '<b>Uncrossing Algorithm</b>: Chooses random path, then uncrosses intersections',
+    'uncross': '<b>2-Opt Algorithm</b>: Chooses random path, then uncrosses intersections',
     'speedy': '<b>Speedy Algorithm</b>: A custom algorithm that combines greedy, annealing, and uncrossing algorithms',
     'bogo': '<b>Bogo-Style Algorithm</b>: Chooses random path, odds of finding shortest path is 1:(n - 1)!',
 }
@@ -68,7 +68,7 @@ function createCity(e: MouseEvent): void {
         }
 
         // pixelSpace to grid space
-        let x = Math.round(xPos / blockXSize);
+        let x = Math.round((xPos - blockXSize / 2) / blockXSize);
 
         // grid space to block space
         const xCoordinate = x - 1 - Math.floor(x / 4);
@@ -148,7 +148,7 @@ function canvasMouseMoved(e: MouseEvent) {
                         }
 
                         // pixelSpace to grid space
-                        let x = Math.round(currentMousePosition[0] / blockXSize);
+                        let x = Math.round((currentMousePosition[0] - blockXSize / 2) / blockXSize);
 
                         // grid space to block space
                         const xCoordinate = x - 1 - Math.floor(x / 4);

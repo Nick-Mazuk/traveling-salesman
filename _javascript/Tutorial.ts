@@ -42,7 +42,7 @@ export class Tutorial {
 
         `<h2>Explore this simulation in depth</h2>
         <p>Learn the specifics behind each algorithm.</p>
-        <p>Check out the code on <a href='https://github.com/Nick-Mazuk/traveling-salesman' target='_blank'>Github</a>.</p>`,
+        <p>Check out the code on <a href='https://github.com/Nick-Mazuk/traveling-salesman' target='_blank'>Github</a> (and star the repo).</p>`,
 
         `<h2>Now go conquer the world!!</h2>`,
     ]

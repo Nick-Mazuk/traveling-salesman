@@ -42,9 +42,8 @@ export class Tutorial {
 
         `<h2>Explore this simulation in depth</h2>
         <p>Learn the specifics behind each algorithm.</p>
-        <p>Check out the code on <a href='https://github.com/Nick-Mazuk/traveling-salesman' target='_blank'>Github</a> (and star the repo).</p>`,
-
-        `<h2>Now go conquer the world!!</h2>`,
+        <p>Check out the code on <a href='https://github.com/Nick-Mazuk/traveling-salesman' target='_blank'>Github</a> (and star the repo).</p>
+        <p>Now start exploring! Ready, set, go…</p>`,
     ]
 
     panelImages = [
@@ -55,7 +54,6 @@ export class Tutorial {
         './assets/algorithmComparison.gif',
         './assets/cityGrid.gif',
         './assets/more.gif',
-        './assets/logo/Logo.svg',
     ]
 
     constructor () {

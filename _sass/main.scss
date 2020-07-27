@@ -1,11 +1,11 @@
 @charset "utf-8";
 
-@import "../node_modules/bulma/sass/utilities/initial-variables";
+@import '../node_modules/bulma/sass/utilities/initial-variables';
 
-$yellow: #FCCE00;
-$red: #EB0000;
+$yellow: #fcce00;
+$red: #eb0000;
 $green: #008a00;
-$blue: #0073E6;
+$blue: #0073e6;
 $primary: $blue;
 $link-visited: $blue;
 $link-hover: $blue;
@@ -14,9 +14,8 @@ $text: #242424;
 $dark: $text;
 $navbar-breakpoint: 0;
 
-
-@import "../node_modules/bulma/bulma";
-@import "../node_modules/bulma-switch/dist/css/bulma-switch.sass";
+@import '../node_modules/bulma/bulma';
+@import '../node_modules/bulma-switch/dist/css/bulma-switch.sass';
 
 body {
     height: 100vh;

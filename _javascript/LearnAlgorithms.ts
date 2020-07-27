@@ -1,13 +1,13 @@
 export class LearnAlgorithms {
-    modalElement: HTMLDivElement;
-    closeButton: HTMLButtonElement;
-    learnAlgorithmsElement: HTMLAnchorElement;
-    tabs: NodeListOf<HTMLAnchorElement>;
-    algorithmOverview: HTMLDivElement;
-    algorithmSpecifics: HTMLDivElement;
-    algorithmFeatures: HTMLDivElement;
+    modalElement: HTMLDivElement
+    closeButton: HTMLButtonElement
+    learnAlgorithmsElement: HTMLAnchorElement
+    tabs: NodeListOf<HTMLAnchorElement>
+    algorithmOverview: HTMLDivElement
+    algorithmSpecifics: HTMLDivElement
+    algorithmFeatures: HTMLDivElement
     algorithms = {
-        'force': {
+        force: {
             overview: `Checks every possible path, guarantees shortest path.`,
             specifics: `<p>Loop through every possible route. If the current route is shorter than all routes already checked, then set it as the shortest route. Return the shortest route at the end.</p>
             
@@ -29,7 +29,7 @@ export class LearnAlgorithms {
             <li>Very slow: <code>O(n!)</code></li>
             </ul>`,
         },
-        'greedy': {
+        greedy: {
             overview: `Each house connects with the next closest house.`,
             specifics: `<p>Loop through each house. Then, find the closes house that hasn't already been picked.</p>
             
@@ -54,7 +54,7 @@ export class LearnAlgorithms {
             <li>Guaranteed to produce not-best case, either</li>
             </ul>`,
         },
-        'annealing': {
+        annealing: {
             overview: `Gradually improves through random changes, avoids local mins.`,
             specifics: `
 <p>Repeatedly make changes to the route. As time goes on, make smaller and smaller changes. After each change, check if the new route is shorter than the previous. If so, set it as the new shortest.</p>
@@ -111,7 +111,7 @@ export class LearnAlgorithms {
             <li>Very similar to a hill-climbing algorithm</li>
             </ul>`,
         },
-        'uncross': {
+        uncross: {
             overview: `Chooses random path, then uncrosses intersections.`,
             specifics: `<p>Picks two random roads between houses. If those roads are crossing, uncross them. This will always shorten the path. Continue looping over all roads until all routes are uncrossed.</p>
             <code class='multi-line'>function uncross(route) {
@@ -140,7 +140,7 @@ export class LearnAlgorithms {
             <li>Very good, gets close to ideal route, but susceptible to local mins</li>
             </ul>`,
         },
-        'speedy': {
+        speedy: {
             overview: `Custom algorithm, combines greedy, annealing, and 2-opt.`,
             specifics: `<ul>
             <li><b>Greedy</b> is very good at getting not-worst path fast</li>
@@ -195,7 +195,7 @@ export class LearnAlgorithms {
             <li>On average, it is faster than annealing, though slower in real-time speed than 2-opt</li>
             </ul>`,
         },
-        'bogo': {
+        bogo: {
             overview: `Chooses random path, odds of finding shortest path is <code>1:(n - 1)!</code>`,
             specifics: `<p>Simply randomize the route.</p>
             <code class='multi-line'>function bogo(route) {
@@ -209,54 +209,54 @@ export class LearnAlgorithms {
         },
     }
 
-    constructor () {
-        this.getHTMLElements();
-        this.addEventListeners();
+    constructor() {
+        this.getHTMLElements()
+        this.addEventListeners()
     }
 
     getHTMLElements(): void {
-        this.modalElement = document.querySelector('#algorithms-modal');
-        this.closeButton = document.querySelector('#algorithms-modal-close');
-        this.learnAlgorithmsElement = document.querySelector('#learn-algorithms');
-        this.algorithmOverview = document.querySelector('#algorithm-overview');
-        this.algorithmSpecifics = document.querySelector('#algorithm-specifics');
-        this.algorithmFeatures = document.querySelector('#algorithm-features');
-        this.tabs = document.querySelectorAll('.algorithms-tab');
+        this.modalElement = document.querySelector('#algorithms-modal')
+        this.closeButton = document.querySelector('#algorithms-modal-close')
+        this.learnAlgorithmsElement = document.querySelector('#learn-algorithms')
+        this.algorithmOverview = document.querySelector('#algorithm-overview')
+        this.algorithmSpecifics = document.querySelector('#algorithm-specifics')
+        this.algorithmFeatures = document.querySelector('#algorithm-features')
+        this.tabs = document.querySelectorAll('.algorithms-tab')
     }
 
     addEventListeners(): void {
-        this.closeButton.addEventListener('click', () => this.closeModal());
-        this.learnAlgorithmsElement.addEventListener('click', () => this.openModal());
-        this.tabs.forEach(tab => tab.addEventListener('click', (e) => this.switchTab(e)));
+        this.closeButton.addEventListener('click', () => this.closeModal())
+        this.learnAlgorithmsElement.addEventListener('click', () => this.openModal())
+        this.tabs.forEach(tab => tab.addEventListener('click', e => this.switchTab(e)))
     }
 
     openModal(): void {
-        this.modalElement.classList.add('is-active');
-        const algorithm = (<HTMLSelectElement>document.querySelector('#algorithm-mode')).value;
-        this.displayDetails(algorithm);
-        const tab = <HTMLAnchorElement>document.querySelector(`.algorithms-tab[data-algorithm=${algorithm}]`);
-        this.activateTab(tab);
+        this.modalElement.classList.add('is-active')
+        const algorithm = (<HTMLSelectElement>document.querySelector('#algorithm-mode')).value
+        this.displayDetails(algorithm)
+        const tab = <HTMLAnchorElement>document.querySelector(`.algorithms-tab[data-algorithm=${algorithm}]`)
+        this.activateTab(tab)
     }
 
     closeModal(): void {
-        this.modalElement.classList.remove('is-active');
+        this.modalElement.classList.remove('is-active')
     }
 
     activateTab(tab: HTMLAnchorElement): void {
-        this.tabs.forEach(tab => tab.classList.remove('is-active'));
-        tab.classList.add('is-active');
+        this.tabs.forEach(tab => tab.classList.remove('is-active'))
+        tab.classList.add('is-active')
     }
 
     displayDetails(algorithm: string): void {
-        this.algorithmOverview.innerHTML = this.algorithms[algorithm].overview;
-        this.algorithmSpecifics.innerHTML = this.algorithms[algorithm].specifics;
-        this.algorithmFeatures.innerHTML = this.algorithms[algorithm].features;
+        this.algorithmOverview.innerHTML = this.algorithms[algorithm].overview
+        this.algorithmSpecifics.innerHTML = this.algorithms[algorithm].specifics
+        this.algorithmFeatures.innerHTML = this.algorithms[algorithm].features
     }
 
     switchTab(e: Event): void {
-        let tab = <HTMLAnchorElement>e.currentTarget;
-        const newAlgorithm = tab.dataset.algorithm;
-        this.activateTab(tab);
-        this.displayDetails(newAlgorithm);
+        let tab = <HTMLAnchorElement>e.currentTarget
+        const newAlgorithm = tab.dataset.algorithm
+        this.activateTab(tab)
+        this.displayDetails(newAlgorithm)
     }
 }

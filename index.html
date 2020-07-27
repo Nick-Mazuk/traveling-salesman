@@ -1,23 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Traveling Salesman | Nick Mazuk</title>
-        <link rel="stylesheet" href="./css/main.css">
+        <link rel="stylesheet" href="css/main.css" />
     </head>
 
-    <body class='has-navbar-fixed-bottom'>
-        <nav class="navbar has-background-light is-transparent" role="navigation" aria-label="main navigation"
-            id='top-navbar'>
+    <body class="has-navbar-fixed-bottom">
+        <nav
+            class="navbar has-background-light is-transparent"
+            role="navigation"
+            aria-label="main navigation"
+            id="top-navbar"
+        >
             <div class="navbar-brand">
                 <a class="navbar-item" href="./">
                     <h2 class="title is-size-4">Traveling Salesman</h2>
                 </a>
 
-                <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false"
-                    data-target="navbarBasicExample">
+                <a
+                    role="button"
+                    class="navbar-burger burger"
+                    aria-label="menu"
+                    aria-expanded="false"
+                    data-target="navbarBasicExample"
+                >
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
@@ -26,15 +34,15 @@
 
             <div id="navbarBasicExample" class="navbar-menu">
                 <div class="navbar-start">
-                    <a class="navbar-item is-unselectable" id='random-board'>
+                    <a class="navbar-item is-unselectable" id="random-board">
                         Random Board
                     </a>
 
-                    <a class="navbar-item is-unselectable" id='clear-board'>
+                    <a class="navbar-item is-unselectable" id="clear-board">
                         Clear Board
                     </a>
 
-                    <a id='tutorial-replay' class="navbar-item is-unselectable">
+                    <a id="tutorial-replay" class="navbar-item is-unselectable">
                         Replay Tutorial
                     </a>
 
@@ -44,42 +52,44 @@
                         </a>
 
                         <div class="navbar-dropdown">
-                            <a class="navbar-item" id='learn-algorithms'>
+                            <a class="navbar-item" id="learn-algorithms">
                                 Learn the Algorithms
                             </a>
-                            <hr class="navbar-divider">
-                            <a class="navbar-item" href='https://github.com/Nick-Mazuk/traveling-salesman'
-                                target="_blank">
+                            <hr class="navbar-divider" />
+                            <a
+                                class="navbar-item"
+                                href="https://github.com/Nick-Mazuk/traveling-salesman"
+                                target="_blank"
+                            >
                                 Github
                             </a>
                         </div>
                     </div>
-
                 </div>
 
                 <div class="navbar-end">
                     <div class="navbar-item">
                         <span>Algorithm:</span> &nbsp;
                         <div class="select">
-                            <select id='algorithm-mode'>
-                                <option value='force'>Brute Force</option>
-                                <option value='greedy'>Greedy</option>
-                                <option value='annealing'>Annealing</option>
-                                <option value='uncross'>2-opt</option>
-                                <option value='speedy' selected>Speedy</option>
-                                <option value='bogo'>Bogo-style</option>
+                            <select id="algorithm-mode">
+                                <option value="force">Brute Force</option>
+                                <option value="greedy">Greedy</option>
+                                <option value="annealing">Annealing</option>
+                                <option value="uncross">2-opt</option>
+                                <option value="speedy" selected>Speedy</option>
+                                <option value="bogo">Bogo-style</option>
                             </select>
                         </div>
                     </div>
-                    <div class='navbar-item'>
+                    <div class="navbar-item">
                         <div class="field">
-                            <input id="mode" type="checkbox" name="mode" class="switch" checked>
+                            <input id="mode" type="checkbox" name="mode" class="switch" checked />
                             <label for="mode">City Grid</label>
                         </div>
                     </div>
                     <div class="navbar-item">
                         <div class="buttons">
-                            <a class="button is-primary" id='recalculate-button'>
+                            <a class="button is-primary" id="recalculate-button">
                                 <strong>Recalculate</strong>
                             </a>
                         </div>
@@ -93,45 +103,73 @@
             <div class="modal-card">
                 <header class="modal-card-head">
                     <p class="modal-card-title">Real-time Traveling Salesman Visualizer</p>
-                    <button id='tutorial-close' class="delete" aria-label="close"></button>
+                    <button id="tutorial-close" class="delete" aria-label="close"></button>
                 </header>
                 <section class="modal-card-body">
-                    <figure id='tutorial-image-container'>
-                        <img id='tutorial-image' src="">
+                    <figure id="tutorial-image-container">
+                        <img id="tutorial-image" src="" />
                     </figure>
-                    <div id='tutorial-content' class="content"></div>
+                    <div id="tutorial-content" class="content"></div>
                 </section>
                 <footer class="modal-card-foot">
                     <div class="level">
                         <div class="level-left">
                             <div class="level-item">
-                                <button id='tutorial-skip' class="button">Skip Tutorial</button>
+                                <button id="tutorial-skip" class="button">Skip Tutorial</button>
                             </div>
                         </div>
                         <div class="level-right">
                             <div class="level-item">
-                                <button id='tutorial-previous' class="button has-text-weight-bold is-hidden">
-                                    <svg id="i-chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"
-                                        width="12" height="12" fill="none" stroke="currentcolor" stroke-linecap="butt"
-                                        stroke-linejoin="miter" stroke-width="8">
+                                <button id="tutorial-previous" class="button has-text-weight-bold is-hidden">
+                                    <svg
+                                        id="i-chevron-left"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 32 32"
+                                        width="12"
+                                        height="12"
+                                        fill="none"
+                                        stroke="currentcolor"
+                                        stroke-linecap="butt"
+                                        stroke-linejoin="miter"
+                                        stroke-width="8"
+                                    >
                                         <path d="M20 30 L8 16 20 2" />
                                     </svg>
-                                    &nbsp;Previous</button>
+                                    &nbsp;Previous
+                                </button>
                             </div>
                             <div class="level-item">
-                                <button id='tutorial-next' class="button is-primary has-text-weight-bold">
+                                <button id="tutorial-next" class="button is-primary has-text-weight-bold">
                                     Next&nbsp;
-                                    <svg id="i-chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"
-                                        width="12" height="12" fill="none" stroke="currentcolor" stroke-linecap="butt"
-                                        stroke-linejoin="miter" stroke-width="8">
+                                    <svg
+                                        id="i-chevron-left"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 32 32"
+                                        width="12"
+                                        height="12"
+                                        fill="none"
+                                        stroke="currentcolor"
+                                        stroke-linecap="butt"
+                                        stroke-linejoin="miter"
+                                        stroke-width="8"
+                                    >
                                         <path d="M12 30 L24 16 12 2" />
                                     </svg>
                                 </button>
-                                <button id='tutorial-finish' class="button is-primary has-text-weight-bold is-hidden">
+                                <button id="tutorial-finish" class="button is-primary has-text-weight-bold is-hidden">
                                     Finish &nbsp;
-                                    <svg id="i-chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"
-                                        width="12" height="12" fill="none" stroke="currentcolor" stroke-linecap="butt"
-                                        stroke-linejoin="miter" stroke-width="8">
+                                    <svg
+                                        id="i-chevron-left"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 32 32"
+                                        width="12"
+                                        height="12"
+                                        fill="none"
+                                        stroke="currentcolor"
+                                        stroke-linecap="butt"
+                                        stroke-linejoin="miter"
+                                        stroke-width="8"
+                                    >
                                         <path d="M2 20 L12 28 30 4" />
                                     </svg>
                                 </button>
@@ -142,18 +180,18 @@
             </div>
         </div>
 
-        <div id='algorithms-modal' class="modal">
+        <div id="algorithms-modal" class="modal">
             <div class="modal-background"></div>
             <div class="modal-content">
                 <div class="box">
                     <div class="tabs is-centered">
                         <ul>
-                            <li data-algorithm='force' class="algorithms-tab is-active"><a>Brute Force</a></li>
-                            <li data-algorithm='greedy' class="algorithms-tab"><a>Greedy</a></li>
-                            <li data-algorithm='annealing' class="algorithms-tab"><a>Annealing</a></li>
-                            <li data-algorithm='uncross' class="algorithms-tab"><a>2-Opt</a></li>
-                            <li data-algorithm='speedy' class="algorithms-tab"><a>Speedy</a></li>
-                            <li data-algorithm='bogo' class="algorithms-tab"><a>Bogo-style</a></li>
+                            <li data-algorithm="force" class="algorithms-tab is-active"><a>Brute Force</a></li>
+                            <li data-algorithm="greedy" class="algorithms-tab"><a>Greedy</a></li>
+                            <li data-algorithm="annealing" class="algorithms-tab"><a>Annealing</a></li>
+                            <li data-algorithm="uncross" class="algorithms-tab"><a>2-Opt</a></li>
+                            <li data-algorithm="speedy" class="algorithms-tab"><a>Speedy</a></li>
+                            <li data-algorithm="bogo" class="algorithms-tab"><a>Bogo-style</a></li>
                         </ul>
                     </div>
 
@@ -169,20 +207,18 @@
                     </div>
                 </div>
             </div>
-            <button id='algorithms-modal-close' class="modal-close is-large" aria-label="close"></button>
+            <button id="algorithms-modal-close" class="modal-close is-large" aria-label="close"></button>
         </div>
 
-        <img src="./assets/house.svg" id='hoveredHouse' class='is-hidden'>
+        <img src="assets/house.svg" id="hoveredHouse" class="is-hidden" />
         <div class="section pt-0 pb-0 pl-0 pr-0 mb-0">
-            <canvas id='canvas'>
-
-            </canvas>
+            <canvas id="canvas"> </canvas>
         </div>
 
-        <nav class="navbar is-transparent is-fixed-bottom has-background-light" id='bottom-navbar'>
+        <nav class="navbar is-transparent is-fixed-bottom has-background-light" id="bottom-navbar">
             <div class="navbar-menu">
                 <div class="navbar-start">
-                    <div class="navbar-item" id='algorithm-descriptions'>
+                    <div class="navbar-item" id="algorithm-descriptions">
                         <b>Annealing Algorithm</b>: Produces close to optimal or optimal path
                     </div>
                 </div>
@@ -198,6 +234,5 @@
             </div>
         </nav>
     </body>
-    <script src="./lib/bundle.js"></script>
-
+    <script src="lib/bundle.js"></script>
 </html>

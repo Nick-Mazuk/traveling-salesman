@@ -47,13 +47,13 @@ export class Tutorial {
     ]
 
     panelImages = [
-        './assets/logo/Logo.svg',
-        './assets/addHouses.gif',
-        './assets/updateRealTime.gif',
-        './assets/chooseAlgorithm.gif',
-        './assets/algorithmComparison.gif',
-        './assets/cityGrid.gif',
-        './assets/more.gif',
+        'assets/logo/Logo.svg',
+        'assets/addHouses.gif',
+        'assets/updateRealTime.gif',
+        'assets/chooseAlgorithm.gif',
+        'assets/algorithmComparison.gif',
+        'assets/cityGrid.gif',
+        'assets/more.gif',
     ]
 
     constructor() {
